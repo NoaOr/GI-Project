@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import difflib
 
 
 def get_score(sentence1, sentence2):
@@ -19,8 +20,16 @@ def get_score(sentence1, sentence2):
     for word in inter:
         index1 = words1.index(word) + 1
         index2 = words2.index(word) + 1
-        sum += 1/np.power(index1, 2) + 1/np.power(index2, 2)
-    precent_match = sum/(2*max_len)
+        if index1 == index2:
+            sum += 1
+        else:
+            sum += 1/np.power(index1, 2) + 1/np.power(index2, 2)
+
+    precent_match = sum/(max_len)
+
+
+
+
     return precent_match
 
 
@@ -34,16 +43,19 @@ def compare_with_table(data_frame, col_name, sentence):
 
 
 def get_top_matches(df, accurecy, col_name, sentence):
-    top_list = []
+    top_dict = {}
     score_list = compare_with_table(df, col_name, sentence)
     max_item = max(score_list)
     for i in range(len(score_list)):
         if (max_item - score_list.__getitem__(i)) < accurecy:
-            top_list.append(i)
+            top_dict[i] = score_list.__getitem__(i)
 
-    return top_list
+    return top_dict
+
 
 if __name__ == '__main__':
+
+    difflib.get_close_matches("hello i am noa", "hello i an amit")
 
     sentence = 'Milk, human, mature, fluid'
     data = {'Food Description':
