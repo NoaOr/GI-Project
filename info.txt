@@ -1,0 +1,18 @@
+row_to_add = ["", df_src.at[row, 'item'], df_src.at[row, 'GI (Glucose = 100)'], '2',
+    #               df_src.at[row, 'reference food & time period'], df_src.at[row, 'serve Size g'],
+    #               df_src.at[row, 'available cerbo hydrate'], df_src.at[row, 'GL per serve'], '-']
+    # last_row = df_dst.shape[0]
+    # df_dst.at[last_row] = row_to_add
+    # df_dst.append({'CSFII 1994-96 Food Code' : ""
+    #                   , 'Food Description in 1994-96 CSFII': df_src.at[row, 'item'],
+    #                'GI Value' : df_src.at[row, 'GI (Glucose = 100)'], 'source table':'2'
+    #                , 'reference food & time period' : df_src.at[row, 'reference food & time period'],
+    #                'serve Size g' : df_src.at[row, 'serve Size g'],
+    #                'available cerbo hydrate' : df_src.at[row, 'available cerbo hydrate'],
+    #                'GL per serve' : df_src.at[row, 'GL per serve'], 'GI_2' : '-'}, ignore_index=True)
+    #
+
+
+
+Columns - Merge Table:
+columns1 = ['CSFII 1994-96 Food Code', 'Food Description in 1994-96 CSFII','GI Value', 'source table', 'reference food & time period',  'serve Size g', 'available cerbo hydrate', 'GL per serve','GI_2']
