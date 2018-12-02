@@ -2,7 +2,6 @@ import pandas as pd
 from fuzzywuzzy import fuzz
 
 
-################################
 def is_contains_sentence(sentence, df, col_name):
     for row in range(df.shape[0]):
         sentence_to_compare = df.at[row, col_name]
@@ -11,12 +10,12 @@ def is_contains_sentence(sentence, df, col_name):
     return False, 0
 
 
-
 def add_to_table(df_src, df_dst, row):
        df_dst.loc[df_dst.shape[0] + 1] = ['-', df_src.at[row, 'item'], df_src.at[row, 'GI (Glucose = 100)'],
                            '2', df_src.at[row, 'reference food & time period'],
                            df_src.at[row, 'serve Size g'], df_src.at[row, 'available cerbo hydrate'],
                            df_src.at[row, 'GL per serve'], '-']
+
 
 def merge_row_in_table(t1_row, t2_row, merge_df, t2_df):
     merge_df.at[t1_row, 'source table'] = '1,2'
