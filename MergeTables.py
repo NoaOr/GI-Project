@@ -28,8 +28,8 @@ def merge_row_in_table(t1_row, t2_row, merge_df, t2_df):
 
 
 if __name__ == '__main__':
-    t1 = pd.read_excel('test1.xlsx')
-    t2 = pd.read_excel('test2.xlsx')
+    t1 = pd.read_excel('table1.xls')
+    t2 = pd.read_excel('table2.xls')
     t1_df = pd.DataFrame(t1)
     t2_df = pd.DataFrame(t2)
     merge_df = pd.DataFrame(t1)
@@ -49,6 +49,7 @@ if __name__ == '__main__':
     t1_col_name = 'Food Description in 1994-96 CSFII'
 
     for t2_row in range(num_rows_t2):
+        print (t2_row)
         sentence = t2_df.loc[t2_row, col_name_t2]
         is_appear, t1_row = is_contains_sentence(sentence, t1_df, t1_col_name)
         if not is_appear:
