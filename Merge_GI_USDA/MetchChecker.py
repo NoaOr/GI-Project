@@ -5,29 +5,6 @@ from fuzzywuzzy import fuzz
 
 counter = 0
 def get_score(sentence1, sentence2):
-    # # change to " "
-    # words1 = sentence1.split(',')
-    # words2 = sentence2.split(',')
-    #
-    # set1 = set(words1)
-    # set2 = set(words2)
-    # if len(set1) > len(set2):
-    #     max_len = len(set1)
-    # else:
-    #     max_len = len(set2)
-    #
-    # inter = set1.intersection(set2)
-    # sum = 0
-    # for word in inter:
-    #     index1 = words1.index(word) + 1
-    #     index2 = words2.index(word) + 1
-    #     if index1 == index2:
-    #         sum += 1
-    #     else:
-    #         sum += 1/np.power(index1, 2) + 1/np.power(index2, 2)
-    #
-    # precent_match = sum/(max_len)
-
     return fuzz.ratio(sentence1, sentence2)
 
 

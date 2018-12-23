@@ -16,3 +16,19 @@ row_to_add = ["", df_src.at[row, 'item'], df_src.at[row, 'GI (Glucose = 100)'], 
 
 Columns - Merge Table:
 columns1 = ['CSFII 1994-96 Food Code', 'Food Description in 1994-96 CSFII','GI Value', 'source table', 'reference food & time period',  'serve Size g', 'available cerbo hydrate', 'GL per serve','GI_2']
+
+
+        details_to_add = {'Long_Desc': usda_df.loc[i, 'Long_Desc'],
+                          'NDB_No' : usda_df.loc[i, 'NDB_No'],
+                          'Water_(g)': usda_df.loc[i, 'Water_(g)'],
+                          'Energ_Kcal': usda_df.loc[i, 'Energ_Kcal'],
+                          'Protein_(g)': usda_df.loc[i, 'Protein_(g)'],
+                          'Lipid_Tot_(g)': usda_df.loc[i, 'Lipid_Tot_(g)'],
+                          'Ash_(g)': usda_df.loc[i, 'Ash_(g)'],
+                          'Carbohydrt_(g)': usda_df.loc[i, 'Carbohydrt_(g)'],
+                          'Fiber_TD_(g)': usda_df.loc[i, 'Fiber_TD_(g)'],
+
+                          'Sugar_Tot_(g)': usda_df.loc[i, 'Sugar_Tot_(g)'],
+                          'Calcium_(mg)': usda_df.loc[i, 'Calcium_(mg)'],
+                          'Iron_(mg)': usda_df.loc[i, 'Iron_(mg)'],
+                          'Fiber_TD_(g)': usda_df.loc[i, 'Fiber_TD_(g)'],}

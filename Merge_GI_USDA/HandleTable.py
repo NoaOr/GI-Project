@@ -1,4 +1,4 @@
-from MetchChecker import *
+from Merge_GI_USDA.MetchChecker import *
 
 
 def add_sentence_to_df_by_match(sentence, accuracy, df, col_name):
