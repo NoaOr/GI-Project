@@ -6,6 +6,7 @@ def add_sentence_to_df_by_match(USDA_desc, accuracy, GI_df, GI_col_name, USDA_df
     cols_to_add = USDA_df.columns.values
     cols_to_add = cols_to_add[1:]
 
+
     if not 'acc' in GI_df.columns:
         GI_df['acc'] = ""
         GI_df['match-sent'] = ""
