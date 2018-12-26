@@ -9,12 +9,12 @@ if __name__ == '__main__':
     # GI_loc = cwd + "Excel_files/GI_final.xlsx"
 
     usda = pd.read_excel("USDA_data.xlsx")
-    GI_table = pd.read_excel("GI_final.xlsx")
+    GI_table = pd.read_excel("GI_merge.xlsx")
     usda_df = pd.DataFrame(usda)
     GI_df = pd.DataFrame(GI_table)
     usda_col_name = 'Long_Desc'
     GI_col_name = 'Food Description in 1994-96 CSFII'
-    accuracy = 5
+    accuracy = 15
 
 
     # to 7794

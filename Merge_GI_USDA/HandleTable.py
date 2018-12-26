@@ -18,6 +18,7 @@ def add_sentence_to_df_by_match(USDA_desc, accuracy, GI_df, GI_col_name, USDA_df
     for key, value in top_dict.items():
         print ("USDA_ROW: " , usda_row)
         print("USDA_desc " , USDA_desc)
+
         if str(GI_df.loc[key, 'acc']) < str(value) or str(GI_df.loc[key, 'acc']) == ''\
                 or str(GI_df.loc[key, 'acc']) == 'nan':
 
