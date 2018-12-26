@@ -1,12 +1,16 @@
 import pandas as pd
 import Excel_files as xl
 from fuzzywuzzy import fuzz
+import math
 
 
 def is_contains_sentence(sentence, df, col_name):
+    num = df.shape[0]
     for row in range(df.shape[0]):
-        print ('row: ', row)
+        #print ('row: ', row)
         sentence_to_compare = df.at[row, col_name]
+        if  not isinstance(sentence, str) or  not isinstance(sentence_to_compare, str):
+            return  False, 0
         if fuzz.ratio(sentence, sentence_to_compare) == 100:
             return True, row
     return False, 0
@@ -29,8 +33,8 @@ def merge_row_in_table(t1_row, t2_row, merge_df, t2_df):
 
 
 if __name__ == '__main__':
-    t1 = pd.read_excel('Excel_files/GI_Src_1.xlsx')
-    t2 = pd.read_excel('Excel_files/GI_Src_2.xlsx')
+    t1 = pd.read_excel('Excel_files/GI_tables/GI_Src_1.xlsx')
+    t2 = pd.read_excel('Excel_files/GI_tables/GI_Src_2.xlsx')
     t1_df = pd.DataFrame(t1)
     t2_df = pd.DataFrame(t2)
     merge_df = pd.DataFrame(t1)
@@ -49,8 +53,8 @@ if __name__ == '__main__':
     col_name_t2 = 'item'
     t1_col_name = 'Food Description in 1994-96 CSFII'
 
-    #for t2_row in range(num_rows_t2):
-    for t2_row in range(168,170):
+    for t2_row in range(num_rows_t2 - 1):
+    #for t2_row in range(549,550):
         print (t2_row)
         sentence = t2_df.loc[t2_row, col_name_t2]
         is_appear, t1_row = is_contains_sentence(sentence, t1_df, t1_col_name)
