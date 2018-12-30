@@ -2,14 +2,14 @@ import pandas as pd
 import Excel_files as xl
 from fuzzywuzzy import fuzz
 import math
-
+import os
 
 def is_contains_sentence(sentence, df, col_name):
     num = df.shape[0]
     for row in range(df.shape[0]):
         #print ('row: ', row)
         sentence_to_compare = df.at[row, col_name]
-        if  not isinstance(sentence, str) or  not isinstance(sentence_to_compare, str):
+        if not isinstance(sentence, str) or not isinstance(sentence_to_compare, str):
             return  False, 0
         if fuzz.ratio(sentence, sentence_to_compare) == 100:
             return True, row
@@ -33,8 +33,10 @@ def merge_row_in_table(t1_row, t2_row, merge_df, t2_df):
 
 
 if __name__ == '__main__':
-    t1 = pd.read_excel('Excel_files/GI_tables/GI_Src_1.xlsx')
-    t2 = pd.read_excel('Excel_files/GI_tables/GI_Src_2.xlsx')
+    x = os.getcwd()
+    os.chdir(os.getcwd()[:os.getcwd().index("Merge_GI_src")] + "Excel_files")
+    t1 = pd.read_excel('GI_tables/GI_Src_1.xlsx')
+    t2 = pd.read_excel('GI_tables/GI_Src_2.xlsx')
     t1_df = pd.DataFrame(t1)
     t2_df = pd.DataFrame(t2)
     merge_df = pd.DataFrame(t1)
