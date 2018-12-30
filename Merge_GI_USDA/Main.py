@@ -10,6 +10,11 @@ if __name__ == '__main__':
 
     usda = pd.read_excel("USDA_data.xlsx")
     GI_table = pd.read_excel("GI_merge.xlsx")
+
+    #usda = pd.read_excel("tests/t1.xlsx")
+    #GI_table = pd.read_excel("tests/test1.xlsx")
+
+
     usda_df = pd.DataFrame(usda)
     GI_df = pd.DataFrame(GI_table)
     usda_col_name = 'Long_Desc'
@@ -18,9 +23,9 @@ if __name__ == '__main__':
 
 
     # to 7794
-    for i in range(usda_df.shape[0] - 1):
-        USDA_desc = usda_df.loc[i, usda_col_name]
-        add_sentence_to_df_by_match(USDA_desc, accuracy, GI_df, GI_col_name, usda_df, i)
+    for i in range(GI_df.shape[0]):
+        GI_desc = GI_df.loc[i, GI_col_name]
+        add_sentence_to_df_by_match(GI_desc, accuracy, usda_df, usda_col_name, GI_df, i)
 
 
     writer = pd.ExcelWriter('GI_USDA_final.xlsx', engine='xlsxwriter')
