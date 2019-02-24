@@ -3,8 +3,7 @@ import os
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-
-
+import Merge_GI_USDA.Main
 
 def correlation_matrix(df):
     col_1 = 'GI Value'
