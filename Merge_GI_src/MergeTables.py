@@ -33,10 +33,8 @@ def merge_row_in_table(t1_row, t2_row, merge_df, t2_df):
 
 
 if __name__ == '__main__':
-    x = os.getcwd()
-    os.chdir(os.getcwd()[:os.getcwd().index("Merge_GI_src")] + "Excel_files")
-    t1 = pd.read_excel('GI_tables/GI_Src_1.xlsx')
-    t2 = pd.read_excel('GI_tables/GI_Src_2.xlsx')
+    t1 = pd.read_excel('Excel_files/GI_tables/GI_Src_1.xlsx')
+    t2 = pd.read_excel('Excel_files/GI_tables/GI_Src_2_new.xlsx')
     t1_df = pd.DataFrame(t1)
     t2_df = pd.DataFrame(t2)
     merge_df = pd.DataFrame(t1)
@@ -65,7 +63,7 @@ if __name__ == '__main__':
         else:
            merge_row_in_table(t1_row, t2_row, merge_df, t2_df)
 
-    writer = pd.ExcelWriter('Excel_files/GI_merge.xlsx', engine='xlsxwriter')
+    writer = pd.ExcelWriter('Excel_files/GI_tables/GI_merge.xlsx', engine='xlsxwriter')
     # Convert the dataframe to an XlsxWriter Excel object.
     merge_df.to_excel(writer, sheet_name='Sheet1')
     # Close the Pandas Excel writer and output the Excel file.

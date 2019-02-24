@@ -1,29 +1,25 @@
 from Merge_GI_USDA.HandleTable import *
 import os
+global num_matches
 
 if __name__ == '__main__':
+    num_matches = 0
     os.chdir(os.getcwd()[:os.getcwd().index("Merge_GI_USDA")] + "Excel_files")
-    #cwd = os.getcwd()
-    #cwd = cwd[:cwd.index("Merge_GI_USDA")]
-    # usda_loc = cwd + "Excel_files/USDA_data.xlsx"
-    # GI_loc = cwd + "Excel_files/GI_final.xlsx"
 
     usda = pd.read_excel("USDA_data.xlsx")
-    GI_table = pd.read_excel("GI_merge.xlsx")
-
-    #usda = pd.read_excel("tests/t1.xlsx")
-    #GI_table = pd.read_excel("tests/test1.xlsx")
-
+    GI_table = pd.read_excel("GI_tables/GI_merge.xlsx")
 
     usda_df = pd.DataFrame(usda)
     GI_df = pd.DataFrame(GI_table)
     usda_col_name = 'Long_Desc'
     GI_col_name = 'Food Description in 1994-96 CSFII'
     accuracy = 15
+    print (GI_df.shape[0])
+    #for i in range(3815, GI_df.shape[0]):
 
-
-    # to 7794
     for i in range(GI_df.shape[0]):
+        if i == 3265:
+            continue
         GI_desc = GI_df.loc[i, GI_col_name]
         add_sentence_to_df_by_match(GI_desc, accuracy, usda_df, usda_col_name, GI_df, i)
 

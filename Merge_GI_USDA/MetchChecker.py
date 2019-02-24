@@ -28,12 +28,15 @@ def compare_with_table(data_frame, col_name, sentence):
 
 
 def get_top_matches(df, accurecy, col_name, sentence):
-    if sentence == 'Banana cake, made with sugar':
-        print ("noa")
     global counter
-    acc_threshold = 80
-
+    acc_threshold = 83
     top_dict = {}
+
+    if not isinstance(sentence, str):
+        print(counter, top_dict)
+        counter += 1
+        return top_dict
+
     score_list, rows_list = compare_with_table(df, col_name, sentence)
     # print (score_list)
     max_item = max(score_list)
