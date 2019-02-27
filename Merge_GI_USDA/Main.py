@@ -15,7 +15,7 @@ if __name__ == '__main__':
     GI_col_name = 'Food Description in 1994-96 CSFII'
     accuracy = 15
     print (GI_df.shape[0])
-    #for i in range(3815, GI_df.shape[0]):
+    #for i in range(4500, 5000):
 
     for i in range(GI_df.shape[0]):
         if i == 3265:
