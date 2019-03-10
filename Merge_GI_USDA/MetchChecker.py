@@ -29,7 +29,7 @@ def compare_with_table(data_frame, col_name, sentence):
 
 def get_top_matches(df, accurecy, col_name, sentence):
     global counter
-    acc_threshold = 83
+    acc_threshold = 70
     top_dict = {}
 
     if not isinstance(sentence, str):
