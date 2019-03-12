@@ -22,7 +22,9 @@ def add_sentence_to_df_by_match(GI_desc, accuracy, usda_df, USDA_col_name, GI_ro
 
         if str(cfg.GI_df_2.loc[GI_row, 'acc']) < str(value) or str(cfg.GI_df_2.loc[GI_row, 'acc']) == ''\
                 or str(cfg.GI_df_2.loc[GI_row, 'acc']) == 'nan':
-            num_matches += 1
+
+            if str(cfg.GI_df_2.loc[GI_row, 'acc']) == '' or str(cfg.GI_df_2.loc[GI_row, 'acc']) == 'nan':
+                num_matches += 1
 
             print("---------------------------------------------------------------------------------")
             print("GI_ROW: ", GI_row)

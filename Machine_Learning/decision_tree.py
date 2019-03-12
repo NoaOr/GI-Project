@@ -1,54 +1,63 @@
+import pandas as pd
 import os
 import numpy as np
-import pandas as pd
-from sklearn.svm.libsvm import cross_validation
-#from cross_validation import train_test_split
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import accuracy_score
-from sklearn import tree
-from sklearn import preprocessing
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.model_selection import LeaveOneOut, KFold
+from scipy.stats import sem
 
 
+def kf_cv(X_train, y_train, model):
+    scores = np.zeros(X_train[:].shape[0])
+
+    kf = KFold(n_splits=2, shuffle=False)  # Define the split - into 2 folds
+    kf.get_n_splits(X_train)  # returns the number of splitting iterations in the cross-validator
+    print(kf)
+    KFold(n_splits=2, random_state=None, shuffle=False)
+
+    for train_index, test_index in kf.split(X_train):
+        X_train_cv, X_test_cv = X_train.iloc[train_index, :], X_train.iloc[test_index, :]
+        y_train_cv, y_test_cv = y_train[train_index], y_train[test_index]
+        model = model.fit(X_train_cv, y_train_cv)
+        y_pred = model.predict(X_test_cv)
+        scores[test_index]= mean_absolute_error(y_test_cv.astype(int), y_pred.astype(int))
+    print(("Mean score: {0:.3f} (+/-{1:.3f})").format(np.mean(scores), sem(scores)))
+    return model
 
 
+# TODO: put this code in another class and return ml_df
 if __name__ == '__main__':
-    print (os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
     os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
-    balance_data = pd.read_excel("GI_USDA_example.xlsx")
+    df = pd.read_excel("GI_USDA_clean.xlsx")
 
-    print ("Dataset Lenght:: ", len(balance_data))
-    print ("Dataset Shape:: ", balance_data.shape)
+    ml_df = df.drop(['CSFII 1994-96 Food Code', 'Food Description in 1994-96 CSFII',
+                     'source table', 'reference food & time period', 'serve Size g',
+                     'available cerbo hydrate', 'GL per serve', 'GI_2', 'acc', 'match-sent',
+                     'GmWt_Desc2', 'GmWt_Desc1', 'Manganese_(mg)',
+                     'GmWt_1', 'GmWt_2', 'Panto_Acid_mg)'], axis='columns')
 
-    X = balance_data.values[:, :]
-    Y = balance_data.values[:, 2]
+    ml_df = ml_df.fillna(0)
+    X = ml_df.drop('GI Value', axis=1, inplace=False)
+    y = ml_df['GI Value'].values
 
-    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3, random_state=100)
+    writer = pd.ExcelWriter('ML_table.xlsx', engine='xlsxwriter')
+    ml_df.to_excel(writer, sheet_name='Sheet1')
+    # Close the Pandas Excel writer and output the Excel file.
+    writer.save()
 
-    clf_gini = DecisionTreeClassifier(criterion="gini", random_state=100,
-                                      max_depth=3, min_samples_leaf=5)
+    DTL_model = DecisionTreeRegressor(max_depth=10)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=33)
 
-    #print(X_train, y_train)
-    enc = OneHotEncoder(handle_unknown='ignore')
-    enc.fit(X_train)
-    #enc.fit(y_train)
-    x_train_2 = enc.transform(X_train).toarray()
-    y_train_2 = enc.transform(y_train)
+    # model1 = loo_cv(X_train, y_train, regr_1)
+    cv_model = kf_cv(X_train, y_train, DTL_model)
 
-    clf_gini.fit(x_train_2, y_train_2)
+    fit_model = DecisionTreeRegressor(max_depth=10)
+    fit_model.fit(X_train, y_train)
+    # Predict
+    cv_predict = cv_model.predict(X_test)
+    fit_predict = fit_model.predict(X_test)
 
-    clf_entropy = DecisionTreeClassifier(criterion="entropy", random_state=100,
-                                         max_depth=3, min_samples_leaf=5)
-    clf_entropy.fit(X_train, y_train)
-
-    clf_gini.predict([[4, 4, 3, 3]])
-
-    y_pred = clf_gini.predict(X_test)
-    y_pred
-
-    y_pred_en = clf_entropy.predict(X_test)
-    y_pred_en
-
-    print ("Accuracy is ", accuracy_score(y_test, y_pred) * 100)
-    print ("Accuracy is ", accuracy_score(y_test, y_pred_en) * 100)
+    print("final cv model error: ", mean_absolute_error(y_test, cv_predict))
+    print("final fit model error: ", mean_absolute_error(y_test, fit_predict))
