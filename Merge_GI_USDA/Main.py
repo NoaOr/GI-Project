@@ -20,9 +20,9 @@ if __name__ == '__main__':
     GI_col_name = 'Food Description in 1994-96 CSFII'
     accuracy = 15
     print (cfg.GI_df_2.shape[0])
-    #for i in range(4500, 5000):
+    for i in range(0, 200):
 
-    for i in range(cfg.GI_df_2.shape[0]):
+    # for i in range(cfg.GI_df_2.shape[0]):
         if i == 3265:
             continue
         GI_desc = cfg.GI_df_2.loc[i, GI_col_name]
