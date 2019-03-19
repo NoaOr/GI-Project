@@ -4,10 +4,10 @@ import os
 import pandas as pd
 from sklearn import metrics
 import numpy as np
-from sklearn.model_selection import cross_val_score
-from sklearn.metrics import r2_score
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import KFold
+
+from Machine_Learning import decision_tree, linear_regression
+
+
 
 
 def measure_performance(X, y, clf, show_accuracy=True, show_classification_report=True, show_confusion_matrix=True):
@@ -36,30 +36,18 @@ if __name__ == '__main__':
                      'source table', 'reference food & time period', 'serve Size g',
                      'available cerbo hydrate', 'GL per serve', 'GI_2', 'acc', 'match-sent',
                      'GmWt_Desc2', 'GmWt_Desc1', 'Manganese_(mg)',
-                     'GmWt_1', 'GmWt_2', 'Panto_Acid_mg)'], axis='columns')
+                     'GmWt_1', 'GmWt_2', 'Panto_Acid_mg)', 'Choline_Tot_ (mg)'], axis='columns')
 
-    ml_df = ml_df.fillna(0)
+    median_df = ml_df.median(skipna=True, numeric_only=True)
+    for column in ml_df:
+        ml_df[column] = ml_df[column].fillna(median_df[column])
 
     X = ml_df.drop('GI Value', axis=1, inplace=False)
-    y = ml_df['GI Value']
+    y = ml_df['GI Value'].values
+    labels = list(ml_df)
 
-    model = LinearRegression()
-    scores = []
-    kfold = KFold(n_splits=3, shuffle=True, random_state=42)
-    z = kfold.split(X, y)
-    for i, (train, test) in enumerate(kfold.split(X, y)):
-        a = X.iloc[train, :]
-        b = y.iloc[train, :]
-        model.fit(X.iloc[train, :], y.iloc[train, :])
-        score = model.score(X.iloc[test, :], y.iloc[test, :])
-        scores.append(score)
-    print(scores)
-    # X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.25, random_state=33)
-    # clf = tree.DecisionTreeRegressor()
-    # clf = clf.fit(X_train, y_train)
-    #
-    # measure_performance(X_train, y_train, clf, show_classification_report=False, show_confusion_matrix=False)
-    #
-
-
-
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=33)
+    print("Decision tree model:\n")
+    decision_tree.predict(X_train, X_test, y_train, y_test, labels)
+    print("\n\nLinear regression model:\n")
+    #linear_regression.predict(X_train, X_test, y_train, y_test)
