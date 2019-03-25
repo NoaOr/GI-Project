@@ -3,12 +3,14 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import GridSearchCV, train_test_split, cross_val_score
 from sklearn.metrics import mean_absolute_error
 from operator import itemgetter
-from sklearn.tree import DecisionTreeClassifier, export_graphviz
-from sklearn import tree
-from sklearn.datasets import load_wine
-from IPython.display import SVG
-from graphviz import Source
-from IPython.display import display
+import os
+from sklearn.externals.six import StringIO
+from IPython.display import Image
+from sklearn.tree import export_graphviz
+import pydotplus
+
+
+
 
 
 def predict(X_train, X_test, y_train, y_test, labels):
@@ -33,10 +35,15 @@ def predict(X_train, X_test, y_train, y_test, labels):
     print("final simple model error: ", mean_absolute_error(y_test, simple_predict))
     print("final cv model error: ", mean_absolute_error(y_test, cv_predict))
 
-    graph = Source(tree.export_graphviz(DTL_model, out_file=None
-                                        , feature_names=labels, class_names=['0', '1', '2']
-                                        , filled=True))
-    display(SVG(graph.pipe(format='svg')))
+    dot_data = StringIO()
+    export_graphviz(DTL_model, out_file=dot_data,feature_names=labels[1:],
+                    filled=True, rounded=True,
+                    special_characters=False)
+    graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+    os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+    graph.write_png('DT nodes.png')
+
+    Image(graph.create_png())
 
 
-    
+
