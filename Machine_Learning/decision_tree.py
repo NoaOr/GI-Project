@@ -27,7 +27,6 @@ def predict(X_train, X_test, y_train, y_test, labels):
         scores = cross_val_score(estimator=DTL_model, X=X_train, y=y_train, cv=7, n_jobs=4)
         depth.append((i, scores.mean()))
     best_depth = max(depth, key=itemgetter(1))[0]
-    print(best_depth)
     DTL_model = DecisionTreeRegressor(max_depth=best_depth)
     DTL_model.fit(X_train, y_train)
     cv_predict = DTL_model.predict(X_test)

@@ -8,7 +8,8 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import LeaveOneOut, KFold
 from scipy.stats import sem
-
+import matplotlib.pyplot as plt
+import sys
 
 def kf_cv(X_train, y_train, model):
     scores = np.zeros(X_train[:].shape[0])
@@ -28,20 +29,48 @@ def kf_cv(X_train, y_train, model):
     return model
 
 
-def predict(X_train, X_test, y_train, y_test):
+def predict(X_train, X_test, y_train, y_test, feaures, pic_name):
     linear_regression_model = linear_model.LinearRegression()
+    linear_regression_model.fit(X_train, y_train)
 
-    cv_model = kf_cv(X_train, y_train, linear_regression_model)
-
-    fit_model = linear_model.LinearRegression()
-    fit_model.fit(X_train, y_train)
     # Predict
-    cv_predict = cv_model.predict(X_test)
-    fit_predict = fit_model.predict(X_test)
+    predict = linear_regression_model.predict(X_test)
 
-    print("final cv model error: ", mean_absolute_error(y_test, cv_predict))
-    print("final fit model error: ", mean_absolute_error(y_test, fit_predict))
+    print("final model error: ", mean_absolute_error(y_test, predict))
+    print("final model score: ", linear_regression_model.score(X_test, y_test))
 
-    print("final cv model score: ", cv_model.score(X_test, y_test))
-    print("final fit model score: ", fit_model.score(X_test, y_test))
+    coefficients = [(d, c) for d, c in zip(feaures, linear_regression_model.coef_)]
+    # Plot outputs
+
+    coefficients_str = ""
+    for a, b in coefficients:
+        coefficients_str += a + ": " + str(b) + ", "
+    coefficients_str = coefficients_str[:-2]
+
+    print(coefficients_str)
+
+    plt.scatter(X_test['Carbohydrt_(g)'], y_test, color='blue', s = 15)
+    plt.scatter(X_test['Carbohydrt_(g)'], predict, color='red', s = 10)
+
+    plt.xticks(())
+    plt.yticks(())
+
+    plt.legend(('GI vlaue', 'predict GI value'),
+               shadow=True, loc=(0.67, 0.85), handlelength=1.5, fontsize=10)
+
+    font = {'family': 'serif',
+            'color': 'black',
+            'weight': 'normal',
+            'size': 16,
+            }
+    plt.title(pic_name, fontdict=font)
+    plt.xlabel('Model Error = ' + str(mean_absolute_error(y_test, predict)) + '\n' +
+               "coefficients: " + '\n' +
+               coefficients_str, fontsize = 5)
+
+
+    if not os.getcwd().__contains__("Graphs & Photos"):
+        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+    plt.savefig(pic_name + '.png')
+    plt.show()
 

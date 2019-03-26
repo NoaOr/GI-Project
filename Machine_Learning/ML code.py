@@ -27,6 +27,27 @@ def measure_performance(X, y, clf, show_accuracy=True, show_classification_repor
         print("Confusion matrix")
         print(metrics.confusion_matrix(y, y_pred), "\n")
 
+def get_train_and_test(df):
+    X = df.drop('GI Value', axis=1, inplace=False)
+    y = df['GI Value'].values
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=33)
+    return X_train, X_test, y_train, y_test
+
+def get_df_by_features(df, features):
+    features.append('GI Value')
+    new_df = df[features]
+
+    #writer = pd.ExcelWriter('temp.xlsx', engine='xlsxwriter')
+    #new_df.to_excel(writer, sheet_name='Sheet1')
+    #writer.save()
+
+    return new_df
+
+def linear_regression_by_features(features, pic_name):
+    filter_df = get_df_by_features(ml_df, features)
+    X_train, X_test, y_train, y_test = get_train_and_test(filter_df)
+    linear_regression.predict(X_train, X_test, y_train, y_test, features, pic_name)
 
 if __name__ == '__main__':
     os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
@@ -42,12 +63,14 @@ if __name__ == '__main__':
     for column in ml_df:
         ml_df[column] = ml_df[column].fillna(median_df[column])
 
-    X = ml_df.drop('GI Value', axis=1, inplace=False)
-    y = ml_df['GI Value'].values
-    labels = list(ml_df)
+    X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=33)
-    print("Decision tree model:\n")
-    decision_tree.predict(X_train, X_test, y_train, y_test, labels)
+    # print("Decision tree model:\n")
+    # labels = list(ml_df)
+    # decision_tree.predict(X_train, X_test, y_train, y_test, labels)
+
     print("\n\nLinear regression model:\n")
-    #linear_regression.predict(X_train, X_test, y_train, y_test)
+
+    linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo')
+    linear_regression_by_features(['Carbohydrt_(g)', 'Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_pro_fibe_sug')
+
