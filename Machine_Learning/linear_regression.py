@@ -1,15 +1,10 @@
-import pandas as pd
 import os
 import numpy as np
 from sklearn import linear_model
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.metrics import mean_absolute_error
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import LeaveOneOut, KFold
 from scipy.stats import sem
 import matplotlib.pyplot as plt
-import sys
 
 def kf_cv(X_train, y_train, model):
     scores = np.zeros(X_train[:].shape[0])
@@ -40,14 +35,14 @@ def predict(X_train, X_test, y_train, y_test, feaures, pic_name):
     print("final model score: ", linear_regression_model.score(X_test, y_test))
 
     coefficients = [(d, c) for d, c in zip(feaures, linear_regression_model.coef_)]
-    # Plot outputs
-
     coefficients_str = ""
     for a, b in coefficients:
         coefficients_str += a + ": " + str(b) + ", "
     coefficients_str = coefficients_str[:-2]
 
     print(coefficients_str)
+
+    # Plot outputs
 
     plt.scatter(X_test['Carbohydrt_(g)'], y_test, color='blue', s = 15)
     plt.scatter(X_test['Carbohydrt_(g)'], predict, color='red', s = 10)

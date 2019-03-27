@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn import metrics
 import numpy as np
 
-from Machine_Learning import decision_tree, linear_regression
+from Machine_Learning import decision_tree, linear_regression, elastic_net
 
 
 
@@ -65,12 +65,28 @@ if __name__ == '__main__':
 
     X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
 
+    ##########################################################
+    # decision tree
+    ##########################################################
+
     # print("Decision tree model:\n")
     # labels = list(ml_df)
     # decision_tree.predict(X_train, X_test, y_train, y_test, labels)
 
-    print("\n\nLinear regression model:\n")
+    ##########################################################
+    # linear regression
+    ##########################################################
 
-    linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo')
-    linear_regression_by_features(['Carbohydrt_(g)', 'Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_pro_fibe_sug')
+    # print("\n\nLinear regression model:\n")
+    # linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo')
+    # linear_regression_by_features(['Carbohydrt_(g)', 'Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_pro_fibe_sug')
 
+    ##########################################################
+    # elastic net
+    ##########################################################
+
+    print("\n\nElastic net model:\n")
+    print("features: ", list(ml_df.columns.values))
+    features = list(ml_df.columns.values)
+    features.remove('GI Value')
+    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net")
