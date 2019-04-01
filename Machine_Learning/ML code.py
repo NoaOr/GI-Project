@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn import metrics
 import numpy as np
 
-from Machine_Learning import decision_tree, linear_regression, elastic_net
+from Machine_Learning import decision_tree, linear_regression, elastic_net, random_forest
 
 
 
@@ -85,8 +85,28 @@ if __name__ == '__main__':
     # elastic net
     ##########################################################
 
-    print("\n\nElastic net model:\n")
-    print("features: ", list(ml_df.columns.values))
+    # print("\n\nElastic net model:\n")
+    # print("features: ", list(ml_df.columns.values))
+    # features = list(ml_df.columns.values)
+    # features.remove('GI Value')
+    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net")
+
+    ##########################################################
+    # random forest
+    ##########################################################
+
+    print("\n\nRandom Forest model:\n")
     features = list(ml_df.columns.values)
     features.remove('GI Value')
-    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net")
+    random_forest.predict(X_train, X_test, y_train, y_test)
+
+
+
+
+
+
+
+
+
+
+
