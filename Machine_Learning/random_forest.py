@@ -3,9 +3,10 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import RandomizedSearchCV
 import numpy as np
+import pandas as pd
 
 
-def predict(X_train, X_test, y_train, y_test):
+def predict(X_train, X_test, y_train, y_test, lables):
     # rf = RandomForestRegressor(random_state=42)
     #
     # print("parameters currently in use by rnadom forest: ")
@@ -45,6 +46,12 @@ def predict(X_train, X_test, y_train, y_test):
     print("final cv random forest model error: ", mean_absolute_error(y_test, cv_predictions))
 
     best_random = rf_random.best_estimator_
+    feature_imp = best_random.feature_importances_
 
+
+
+    # feature_imp = pd.Series(rf_random.feature_importances_, index=lables).sort_values(ascending=False)
+
+    print(feature_imp)
 
 

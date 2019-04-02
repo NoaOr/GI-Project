@@ -98,7 +98,7 @@ if __name__ == '__main__':
     print("\n\nRandom Forest model:\n")
     features = list(ml_df.columns.values)
     features.remove('GI Value')
-    random_forest.predict(X_train, X_test, y_train, y_test)
+    random_forest.predict(X_train, X_test, y_train, y_test, features)
 
 
 
