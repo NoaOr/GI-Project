@@ -54,7 +54,7 @@ if __name__ == '__main__':
     df = pd.read_excel("GI_USDA_clean.xlsx")
 
     ml_df = df.drop(['CSFII 1994-96 Food Code', 'Food Description in 1994-96 CSFII',
-                     'source table', 'reference food & time period', 'serve Size g',
+                     'source table', 'NDB_No', 'reference food & time period', 'serve Size g',
                      'available cerbo hydrate', 'GL per serve', 'GI_2', 'acc', 'match-sent',
                      'GmWt_Desc2', 'GmWt_Desc1', 'Manganese_(mg)',
                      'GmWt_1', 'GmWt_2', 'Panto_Acid_mg)', 'Choline_Tot_ (mg)'], axis='columns')
@@ -85,22 +85,21 @@ if __name__ == '__main__':
     # elastic net
     ##########################################################
 
-    # print("\n\nElastic net model:\n")
-    # print("features: ", list(ml_df.columns.values))
-    # features = list(ml_df.columns.values)
-    # features.remove('GI Value')
-    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net")
+    print("\n\nElastic net model:\n")
+    print("features: ", list(ml_df.columns.values))
+    features = list(ml_df.columns.values)
+    features.remove('GI Value')
+    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net")
 
     ##########################################################
     # random forest
     ##########################################################
 
+
     print("\n\nRandom Forest model:\n")
     features = list(ml_df.columns.values)
     features.remove('GI Value')
     random_forest.predict(X_train, X_test, y_train, y_test, features, 'RF_variable_importance', 'Random_Forest')
-
-
 
 
 
