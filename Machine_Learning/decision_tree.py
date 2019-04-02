@@ -42,7 +42,6 @@ def predict(X_train, X_test, y_train, y_test, labels):
     os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
     graph.write_png('DT nodes.png')
 
-    Image(graph.create_png())
 
 
 
