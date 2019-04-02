@@ -18,8 +18,16 @@ def predict(X_train, X_test, y_train, y_test, features, pic_name):
     coefficients = [(d, c) for d, c in zip(features, model.coef_)]
     coefficients_str = ""
     for a, b in coefficients:
-        coefficients_str += a + ": " + str(b) + ", "
+        coefficients_str += a + ": " + str("%.4f" % b) + ", "
     coefficients_str = coefficients_str[:-2]
+    index = coefficients_str.index("Phosphorus_(mg)")
+    coefficients_str = coefficients_str[:index - 1] + '\n' + coefficients_str[index :]
+
+    index = coefficients_str.index("Vit_B6_(mg)")
+    coefficients_str = coefficients_str[:index - 1] + '\n' + coefficients_str[index:]
+
+    index = coefficients_str.index("Beta_Carot_(µg)")
+    coefficients_str = coefficients_str[:index - 1] + '\n' + coefficients_str[index:]
 
     print("coef: ", coefficients_str)
 
@@ -27,6 +35,8 @@ def predict(X_train, X_test, y_train, y_test, features, pic_name):
 
 
 def plot_predict(X_test, y_test, predict, coefficients_str, pic_name):
+    plt.rcParams["figure.figsize"] = (11, 7)
+
     plt.scatter(X_test['Carbohydrt_(g)'], y_test, color='blue', s=15)
     plt.scatter(X_test['Carbohydrt_(g)'], predict, color='red', s=10)
 
@@ -39,7 +49,7 @@ def plot_predict(X_test, y_test, predict, coefficients_str, pic_name):
     font = {'family': 'serif',
             'color': 'black',
             'weight': 'normal',
-            'size': 16,
+            'size': 24,
             }
     plt.title(pic_name, fontdict=font)
     plt.xlabel('Model Error = ' + str(mean_absolute_error(y_test, predict)) + '\n' +

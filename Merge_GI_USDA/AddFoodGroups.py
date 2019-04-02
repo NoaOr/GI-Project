@@ -1,5 +1,7 @@
 import os
 import pandas as pd
+from fuzzywuzzy import fuzz
+
 
 def merge_food_group_to_description():
     os.chdir(os.getcwd()[:os.getcwd().index("Merge_GI_USDA")] + "Excel_files/USDA_Src")
@@ -32,13 +34,26 @@ def merge_final_gi_usda_with_food_groups():
 
     for i in range(gi_usda_df.shape[0]):
         print(i)
+        max_match = 0
+        match = ""
         for j in range(food_groups_df.shape[0]):
             if gi_usda_df.iloc[i]["match-sent"] == food_groups_df.iloc[j]["Long_Desc"]:
-                gi_usda_df.loc[i, "FdGrp_desc"] = food_groups_df.iat[j, 2]
-                print("__________________________________")
-                print("gi-usda: ", gi_usda_df.iat[i, 10])
-                print("desc: ", food_groups_df.iat[j, 2])
-                print("__________________________________")
+                #gi_usda_df.loc[i, "FdGrp_desc"] = food_groups_df.iat[j, 2]
+                match = food_groups_df.iat[j, 2]
+                break
+            else:
+                match_acc = fuzz.ratio(gi_usda_df.iloc[i]["match-sent"], food_groups_df.iloc[j]["Long_Desc"])
+                if match_acc > max_match:
+                    match = food_groups_df.iat[j, 2]
+                    max_match = match_acc
+
+        gi_usda_df.loc[i, "FdGrp_desc"] = match
+        print("__________________________________")
+        print("gi-usda: ", gi_usda_df.iat[i, 10])
+        print("desc: ", match)
+        print("__________________________________")
+
+
     writer = pd.ExcelWriter('GI_USDA_CLEAN_FOOD_GROUPS.xlsx', engine='xlsxwriter')
     gi_usda_df.to_excel(writer, sheet_name='Sheet1')
     writer.save()
