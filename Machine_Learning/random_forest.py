@@ -7,6 +7,7 @@ import pydotplus
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os
+from fastai.structured import draw_tree
 
 from sklearn.tree import export_graphviz
 
@@ -98,6 +99,10 @@ def plot_predicts(model, lables, X_test, y_test, predict, pic_name1, pic_name2):
     if not os.getcwd().__contains__("Graphs & Photos"):
         os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
     plt.savefig(pic_name2 + '.png')
+
+    draw_tree(m.estimators_[0], X_train, precision=3)
+    plt.show()
+
     #
     # dot_data = StringIO()
     # export_graphviz(best_random, out_file=dot_data, feature_names=lables,
