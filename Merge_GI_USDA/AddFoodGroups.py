@@ -27,11 +27,22 @@ def merge_final_gi_usda_with_food_groups():
     food_groups = pd.read_excel("USDA_Src/food_groups_with_desc.xlsx")
     food_groups_df = pd.DataFrame(food_groups)
 
-    gi_usda = pd.read_excel("GI_USDA_clean.xlsx")
+    #gi_usda = pd.read_excel("GI_USDA_CLEAN_FOOD_GROUPS.xlsx")
+    gi_usda = pd.read_excel("gi_usda_without_indexes.xlsx")
     gi_usda_df = pd.DataFrame(gi_usda)
 
     gi_usda_df['FdGrp_desc'] = ""
 
+
+    # gi_usda_df.loc[229, "FdGrp_desc"] = "noa"
+    #
+    #
+    # writer = pd.ExcelWriter('noa.xlsx', engine='xlsxwriter')
+    # gi_usda_df.to_excel(writer, sheet_name='Sheet1')
+    # writer.save()
+
+
+    #for i in range(770, 775):
     for i in range(gi_usda_df.shape[0]):
         print(i)
         max_match = 0
