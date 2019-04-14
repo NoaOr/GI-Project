@@ -74,6 +74,7 @@ def plot_predicts(model, lables, X_test, y_test, predict, pic_name1, pic_name2):
     plt.gcf().set_size_inches(15, 9.3, forward=True)
     if not os.getcwd().__contains__("Graphs & Photos"):
         os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+    plt.show()
     plt.savefig(pic_name1 + '.png')
 
     plt.close()
@@ -100,7 +101,7 @@ def plot_predicts(model, lables, X_test, y_test, predict, pic_name1, pic_name2):
         os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
     plt.savefig(pic_name2 + '.png')
 
-    draw_tree(m.estimators_[0], X_train, precision=3)
+    # draw_tree(m.estimators_[0], X_train, precision=3)
     plt.show()
 
     #

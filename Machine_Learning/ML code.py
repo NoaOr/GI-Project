@@ -32,37 +32,60 @@ def split_to_train_test(df):
     X = df.drop('GI Value', axis=1, inplace=False)
     y = df['GI Value'].values
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=33)
+    # X_train.insert(0, 'index', "")
+    # X_test.insert(0, 'index', "")
 
+    # X_train.set_index([pd.Index(list(range(X_train.shape[0]))), 'index'], inplace=True)
+    # X_test.set_index([pd.Index(list(range(X_test.shape[0]))), 'index'], inplace=True)
+
+
+    X_train.reset_index(drop=True, inplace=True)
+    X_test.reset_index(drop=True, inplace=True)
     euclidean_df = pd.read_excel("Euclidean_distance.xlsx")
-
-    for i in range(X_test.shape[0]):
+    x_test_size = X_test.shape[0]
+    for i in range(x_test_size):
         food_name = X_test.iloc[i]['Food Description in 1994-96 CSFII']
         for j in range(X_train.shape[0]):
+            # print("i: ", i, " j: ", j)
+            if j >= X_train.shape[0]:
+                break
+
+            # a = list(range(X_train.shape[0]))
+            # X_train.set_index([pd.Index(a), 'Food Description in 1994-96 CSFII'], inplace=True)
+            # a = list(range(X_test.shape[0]))
+            # X_test.set_index([pd.Index(a), 'Food Description in 1994-96 CSFII'], inplace=True)
+
             compared_food = X_train.iloc[j]['Food Description in 1994-96 CSFII']
             row_index = euclidean_df.columns.get_loc(food_name)
             if euclidean_df.iloc[row_index][compared_food] < 10:
-                print("x_train:", X_train.shape[0])
-                print("x_test:", X_test.shape[0])
-                print("y_train:", y_train.shape[0])
-                print("y_test:", y_test.shape[0])
+                # print("x_train:", X_train.shape[0])
+                # print("x_test:", X_test.shape[0])
+                # print("y_train:", y_train.shape[0])
+                # print("y_test:", y_test.shape[0])
 
                 index = X_train.index[X_train['Food Description in 1994-96 CSFII'] == compared_food].tolist()[0]
-                X_test.loc[X_test.shape[0]] = X_train['Food Description in 1994-96 CSFII'] == compared_food
-                a = y_train[index]
-                b = np.array(a)
-
-                # todo: add and delete from the Y arrays
-
-                # np.append(y_test, y_train[index], 0)
-                # y_test.append(y_train[index])
+                b = X_train.loc[X_train['Food Description in 1994-96 CSFII'] == compared_food]
+                # print("b columns: ", b.shape[1])
+                # print("test columns: ", X_test.shape[1])
+                X_test = X_test.append(b, ignore_index=True)
+                y_test = np.append(y_test, y_train[index])
                 X_train = X_train[X_train['Food Description in 1994-96 CSFII'] != compared_food]
-                # np.delete(y_train, index, 0)
-                # y_train.delete(y_train[index])
+                X_train.reset_index(drop=True, inplace=True)
+                y_train = np.delete(y_train, index)
+                #
+                # print("x_train:", X_train.shape[0])
+                # print("x_test:", X_test.shape[0])
+                # print("y_train:", y_train.shape[0])
+                # print("y_test:", y_test.shape[0])
 
-                print("x_train:", X_train.shape[0])
-                print("x_test:", X_test.shape[0])
-                print("y_train:", y_train.shape[0])
-                print("y_test:", y_test.shape[0])
+    print("x_train:", X_train.shape[0])
+    print("x_test:", X_test.shape[0])
+    print("y_train:", y_train.shape[0])
+    print("y_test:", y_test.shape[0])
+    X_train = X_train.drop(['Food Description in 1994-96 CSFII', 'FdGrp_desc'], axis='columns')
+    X_test = X_test.drop(['Food Description in 1994-96 CSFII', 'FdGrp_desc'], axis='columns')
+    return X_train, X_test, y_train, y_test
+
 
 
 def get_train_and_test(df):
@@ -89,7 +112,7 @@ def linear_regression_by_features(features, pic_name):
 
 if __name__ == '__main__':
     os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
-    df = pd.read_excel("GI_USDA_clean.xlsx")
+    df = pd.read_excel("GI_USDA_CLEAN_FOOD_GROUPS.xlsx")
 
     ml_df = df.drop(['CSFII 1994-96 Food Code',
                      'source table', 'NDB_No', 'reference food & time period', 'serve Size g',
@@ -99,20 +122,26 @@ if __name__ == '__main__':
 
     median_df = ml_df.median(skipna=True, numeric_only=True)
     for column in ml_df:
-        if column == "Food Description in 1994-96 CSFII":
+        if column == "Food Description in 1994-96 CSFII" or column == "FdGrp_desc":
             continue
         ml_df[column] = ml_df[column].fillna(median_df[column])
 
 
 
-    split_to_train_test(ml_df)
+    X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
 
-    X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
+    # X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
+    # X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    # X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
 
+    features = list(ml_df.columns.values)
+    features.remove('GI Value')
+    features.remove('Food Description in 1994-96 CSFII')
+    features.remove('FdGrp_desc')
     ##########################################################
     # decision tree
     ##########################################################
-
+    #
     # print("Decision tree model:\n")
     # labels = list(ml_df)
     # decision_tree.predict(X_train, X_test, y_train, y_test, labels)
@@ -121,9 +150,9 @@ if __name__ == '__main__':
     # linear regression
     ##########################################################
 
-    # print("\n\nLinear regression model:\n")
-    # linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo')
-    # linear_regression_by_features(['Carbohydrt_(g)', 'Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_pro_fibe_sug')
+    print("\n\nLinear regression model:\n")
+    linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo_new_test')
+    linear_regression_by_features(['Carbohydrt_(g)', 'Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_pro_fibe_sug_new_test')
 
     ##########################################################
     # elastic net
@@ -131,9 +160,9 @@ if __name__ == '__main__':
 
     print("\n\nElastic net model:\n")
     print("features: ", list(ml_df.columns.values))
-    features = list(ml_df.columns.values)
-    features.remove('GI Value')
-    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net")
+    # features = list(ml_df.columns.values)
+    # features.remove('GI Value')
+    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test")
 
     ##########################################################
     # random forest
@@ -141,9 +170,9 @@ if __name__ == '__main__':
 
 
     print("\n\nRandom Forest model:\n")
-    features = list(ml_df.columns.values)
-    features.remove('GI Value')
-    random_forest.predict(X_train, X_test, y_train, y_test, features, 'RF_variable_importance', 'Random_Forest')
+    # features = list(ml_df.columns.values)
+    # features.remove('GI Value')
+    random_forest.predict(X_train, X_test, y_train, y_test, features, 'RF_variable_importance_new_test', 'Random_Forest_new_test')
 
 
 
