@@ -32,13 +32,6 @@ def split_to_train_test(df):
     X = df.drop('GI Value', axis=1, inplace=False)
     y = df['GI Value'].values
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=33)
-    # X_train.insert(0, 'index', "")
-    # X_test.insert(0, 'index', "")
-
-    # X_train.set_index([pd.Index(list(range(X_train.shape[0]))), 'index'], inplace=True)
-    # X_test.set_index([pd.Index(list(range(X_test.shape[0]))), 'index'], inplace=True)
-
-
     X_train.reset_index(drop=True, inplace=True)
     X_test.reset_index(drop=True, inplace=True)
     euclidean_df = pd.read_excel("Euclidean_distance.xlsx")
@@ -46,37 +39,19 @@ def split_to_train_test(df):
     for i in range(x_test_size):
         food_name = X_test.iloc[i]['Food Description in 1994-96 CSFII']
         for j in range(X_train.shape[0]):
-            # print("i: ", i, " j: ", j)
             if j >= X_train.shape[0]:
                 break
 
-            # a = list(range(X_train.shape[0]))
-            # X_train.set_index([pd.Index(a), 'Food Description in 1994-96 CSFII'], inplace=True)
-            # a = list(range(X_test.shape[0]))
-            # X_test.set_index([pd.Index(a), 'Food Description in 1994-96 CSFII'], inplace=True)
-
             compared_food = X_train.iloc[j]['Food Description in 1994-96 CSFII']
             row_index = euclidean_df.columns.get_loc(food_name)
-            if euclidean_df.iloc[row_index][compared_food] < 10:
-                # print("x_train:", X_train.shape[0])
-                # print("x_test:", X_test.shape[0])
-                # print("y_train:", y_train.shape[0])
-                # print("y_test:", y_test.shape[0])
-
+            if euclidean_df.iloc[row_index][compared_food] < 8:
                 index = X_train.index[X_train['Food Description in 1994-96 CSFII'] == compared_food].tolist()[0]
                 b = X_train.loc[X_train['Food Description in 1994-96 CSFII'] == compared_food]
-                # print("b columns: ", b.shape[1])
-                # print("test columns: ", X_test.shape[1])
                 X_test = X_test.append(b, ignore_index=True)
                 y_test = np.append(y_test, y_train[index])
                 X_train = X_train[X_train['Food Description in 1994-96 CSFII'] != compared_food]
                 X_train.reset_index(drop=True, inplace=True)
                 y_train = np.delete(y_train, index)
-                #
-                # print("x_train:", X_train.shape[0])
-                # print("x_test:", X_test.shape[0])
-                # print("y_train:", y_train.shape[0])
-                # print("y_test:", y_test.shape[0])
 
     print("x_train:", X_train.shape[0])
     print("x_test:", X_test.shape[0])
@@ -128,13 +103,13 @@ if __name__ == '__main__':
 
 
 
-    # X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
+    X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
 
-    X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
-    X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
-    X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
-    X_train = X_train.drop(['FdGrp_desc'], axis='columns')
-    X_test = X_test.drop(['FdGrp_desc'], axis='columns')
+    # X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
+    # X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    # X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    # X_train = X_train.drop(['FdGrp_desc'], axis='columns')
+    # X_test = X_test.drop(['FdGrp_desc'], axis='columns')
 
     features = list(ml_df.columns.values)
     features.remove('GI Value')
@@ -144,47 +119,33 @@ if __name__ == '__main__':
     # decision tree
     ##########################################################
 
-    print("Decision tree model:\n")
-    # labels = list(ml_df)
-    # labels.remove('Food Description in 1994-96 CSFII')
-    # labels.remove('FdGrp_desc')
-    decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test')
+    # print("Decision tree model:\n")
+    # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test')
 
     ##########################################################
     # linear regression
     ##########################################################
 
-    print("\n\nLinear regression model:\n")
-    linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo_new_test')
-    linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test')
-    linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_lipid_pro_fibe_sug_new_test')
+    # print("\n\nLinear regression model:\n")
+    # linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo_new_test')
+    # linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test')
+    # linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_lipid_pro_fibe_sug_new_test')
 
     # ##########################################################
     # # elastic net
     # ##########################################################
 
-    print("\n\nElastic net model:\n")
-    print("features: ", list(ml_df.columns.values))
-    # features = list(ml_df.columns.values)
-    # features.remove('GI Value')
-    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test")
+    # print("\n\nElastic net model:\n")
+    # print("features: ", list(ml_df.columns.values))
+    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test")
 
     ##########################################################
     # random forest
     ##########################################################
 
 
-    # print("\n\nRandom Forest model:\n")
-    # # features = list(ml_df.columns.values)
-    # # features.remove('GI Value')
-    # random_forest.predict(X_train, X_test, y_train, y_test, features, 'RF_variable_importance_new_test', 'Random_Forest_new_test')
-
-    # random_forest.predict(X_train, X_test, y_train, y_test, features)
-
-
-
-
-    # random_forest.predict(X_train, X_test, y_train, y_test, features, 'RF_variable_importance_new_test')
+    print("\n\nRandom Forest model:\n")
+    random_forest.predict(X_train, X_test, y_train, y_test, features, 'RF_variable_importance_new_test', 'Random_Forest_new_test')
 
 
 

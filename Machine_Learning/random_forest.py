@@ -124,6 +124,7 @@
 #
 #
 #
+import sklearn
 
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
@@ -178,12 +179,6 @@ def predict(X_train, X_test, y_train, y_test, lables, pic_name1, pic_name2):
     feature_imp = best_random.feature_importances_
 
     features_dict = dict(zip(lables, feature_imp))
-    # f = [(d, c) for d, c in zip(lables, feature_imp)]
-    # features_str = ""
-    # for a, b in f:
-    #     features_str += a + ": " + str(b) + ", "
-    # features_str = features_str[:-2]
-
     print(features_dict)
 
     indices = np.argsort(feature_imp)
@@ -202,6 +197,14 @@ def predict(X_train, X_test, y_train, y_test, lables, pic_name1, pic_name2):
     plt.savefig(pic_name1 + '.png')
 
     plt.close()
+    plot_graphs(X_test, y_test, cv_predictions, lables, rf_random, pic_name2)
+
+def plot_graphs(X_test, y_test, cv_predictions, lables, rf_random, pic_name2):
+    # Plot outputs
+
+    print("mean absolute error: ", mean_absolute_error(y_test, cv_predictions))
+    print("r2 error: ", sklearn.metrics.r2_score(y_test, cv_predictions))
+
     plt.scatter(X_test['Carbohydrt_(g)'], y_test, color='blue', s=15)
     plt.scatter(X_test['Carbohydrt_(g)'], cv_predictions, color='red', s=10)
 
@@ -217,12 +220,9 @@ def predict(X_train, X_test, y_train, y_test, lables, pic_name1, pic_name2):
             'size': 16,
             }
     plt.title(pic_name2, fontdict=font)
-    # plt.xlabel('Model Error = ' + str(mean_absolute_error(y_test, predict)) + '\n' +
-    #            "coefficients: " + '\n' +
-    #            features_str, fontsize=5)
-
-    # plt.xlabel('Model Error = ' + str(mean_absolute_error(y_test, predict)) + '\n' +
-    #            "coefficients: " + '\n')
+    plt.xlabel('Mean absolute Error = ' + str(mean_absolute_error(y_test, cv_predictions)) + '\n' +
+               'R2 score = ' + str(sklearn.metrics.r2_score(y_test, cv_predictions)),
+                fontsize=5)
 
     if not os.getcwd().__contains__("Graphs & Photos"):
         os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
