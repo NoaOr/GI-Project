@@ -128,11 +128,13 @@ if __name__ == '__main__':
 
 
 
-    X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
+    # X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
 
-    # X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
-    # X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
-    # X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
+    X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    X_train = X_train.drop(['FdGrp_desc'], axis='columns')
+    X_test = X_test.drop(['FdGrp_desc'], axis='columns')
 
     features = list(ml_df.columns.values)
     features.remove('GI Value')
@@ -179,6 +181,7 @@ if __name__ == '__main__':
 
 
 
+    # random_forest.predict(X_train, X_test, y_train, y_test, features, 'RF_variable_importance_new_test')
 
 
 
