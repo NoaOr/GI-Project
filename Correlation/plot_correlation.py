@@ -25,4 +25,4 @@ if __name__ == '__main__':
     hm = cmn.ax_heatmap.get_position()
     plt.setp(cmn.ax_heatmap.yaxis.get_majorticklabels(), fontsize=6)
     cmn.ax_heatmap.set_position([hm.x0, hm.y0, hm.width, hm.height])
-    plt.show()
+    # plt.show()
