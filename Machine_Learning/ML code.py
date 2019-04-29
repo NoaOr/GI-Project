@@ -143,38 +143,41 @@ if __name__ == '__main__':
     ##########################################################
     # decision tree
     ##########################################################
-    #
-    # print("Decision tree model:\n")
+
+    print("Decision tree model:\n")
     # labels = list(ml_df)
-    # decision_tree.predict(X_train, X_test, y_train, y_test, labels)
+    # labels.remove('Food Description in 1994-96 CSFII')
+    # labels.remove('FdGrp_desc')
+    decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test')
 
     ##########################################################
     # linear regression
     ##########################################################
-    #
-    # print("\n\nLinear regression model:\n")
-    # linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo_new_test')
-    # linear_regression_by_features(['Carbohydrt_(g)', 'Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_pro_fibe_sug_new_test')
-    #
+
+    print("\n\nLinear regression model:\n")
+    linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo_new_test')
+    linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test')
+    linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_lipid_pro_fibe_sug_new_test')
+
     # ##########################################################
     # # elastic net
     # ##########################################################
-    #
-    # print("\n\nElastic net model:\n")
-    # print("features: ", list(ml_df.columns.values))
-    # # features = list(ml_df.columns.values)
-    # # features.remove('GI Value')
-    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test")
+
+    print("\n\nElastic net model:\n")
+    print("features: ", list(ml_df.columns.values))
+    # features = list(ml_df.columns.values)
+    # features.remove('GI Value')
+    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test")
 
     ##########################################################
     # random forest
     ##########################################################
 
 
-    print("\n\nRandom Forest model:\n")
-    # features = list(ml_df.columns.values)
-    # features.remove('GI Value')
-    random_forest.predict(X_train, X_test, y_train, y_test, features, 'RF_variable_importance_new_test', 'Random_Forest_new_test')
+    # print("\n\nRandom Forest model:\n")
+    # # features = list(ml_df.columns.values)
+    # # features.remove('GI Value')
+    # random_forest.predict(X_train, X_test, y_train, y_test, features, 'RF_variable_importance_new_test', 'Random_Forest_new_test')
 
     # random_forest.predict(X_train, X_test, y_train, y_test, features)
 

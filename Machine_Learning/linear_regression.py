@@ -1,4 +1,6 @@
 import os
+import sklearn
+
 import numpy as np
 from sklearn import linear_model
 from sklearn.metrics import mean_absolute_error
@@ -31,8 +33,8 @@ def predict(X_train, X_test, y_train, y_test, feaures, pic_name):
     # Predict
     predict = linear_regression_model.predict(X_test)
 
-    print("final model error: ", mean_absolute_error(y_test, predict))
-    print("final model score: ", linear_regression_model.score(X_test, y_test))
+    print("mean absolute error: ", mean_absolute_error(y_test, predict))
+    print("r2 error: ", sklearn.metrics.r2_score(y_test, predict))
 
     coefficients = [(d, c) for d, c in zip(feaures, linear_regression_model.coef_)]
     coefficients_str = ""
@@ -59,8 +61,9 @@ def predict(X_train, X_test, y_train, y_test, feaures, pic_name):
             'size': 16,
             }
     plt.title(pic_name, fontdict=font)
-    plt.xlabel('Model Error = ' + str(mean_absolute_error(y_test, predict)) + '\n' +
-               "coefficients: " + '\n' +
+    plt.xlabel('Mean absolute Error = ' + str(mean_absolute_error(y_test, predict)) + '\n' +
+                'R2 score = ' + str(sklearn.metrics.r2_score(y_test, predict)) +
+               'coefficients: ' + '\n' +
                coefficients_str, fontsize = 5)
 
 

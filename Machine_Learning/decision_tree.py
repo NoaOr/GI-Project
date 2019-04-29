@@ -1,3 +1,4 @@
+import sklearn
 
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import GridSearchCV, train_test_split, cross_val_score
@@ -8,12 +9,10 @@ from sklearn.externals.six import StringIO
 from IPython.display import Image
 from sklearn.tree import export_graphviz
 import pydotplus
+import matplotlib.pyplot as plt
 
 
-
-
-
-def predict(X_train, X_test, y_train, y_test, labels):
+def predict(X_train, X_test, y_train, y_test, labels, pic_name):
     #todo
     simple_model = DecisionTreeRegressor(max_depth=10)
     simple_model.fit(X_train, y_train)
@@ -31,16 +30,48 @@ def predict(X_train, X_test, y_train, y_test, labels):
     DTL_model.fit(X_train, y_train)
     cv_predict = DTL_model.predict(X_test)
 
-    print("final simple model error: ", mean_absolute_error(y_test, simple_predict))
-    print("final cv model error: ", mean_absolute_error(y_test, cv_predict))
+    print("mean absolute error: ", mean_absolute_error(y_test, simple_predict))
+    print("r2 error: ", sklearn.metrics.r2_score(y_test, simple_predict))
+
+    print("mean absolute error(cv): ", mean_absolute_error(y_test, cv_predict))
+    print("r2 error(cv): ", sklearn.metrics.r2_score(y_test, cv_predict))
+
 
     dot_data = StringIO()
-    export_graphviz(DTL_model, out_file=dot_data,feature_names=labels[1:],
+    export_graphviz(DTL_model, out_file=dot_data,feature_names=labels,
                     filled=True, rounded=True,
                     special_characters=False)
     graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
     os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
     graph.write_png('DT nodes.png')
+
+    # Plot outputs
+
+    plt.scatter(X_test['Carbohydrt_(g)'], y_test, color='blue', s = 15)
+    plt.scatter(X_test['Carbohydrt_(g)'], cv_predict, color='red', s = 10)
+
+    plt.xticks(())
+    plt.yticks(())
+
+    plt.legend(('GI vlaue', 'predict GI value'),
+               shadow=True, loc=(0.67, 0.85), handlelength=1.5, fontsize=10)
+
+    font = {'family': 'serif',
+            'color': 'black',
+            'weight': 'normal',
+            'size': 16,
+            }
+    plt.title(pic_name, fontdict=font)
+    plt.xlabel('Mean absolute Error = ' + str(mean_absolute_error(y_test, cv_predict)) + '\n' +
+                'R2 score = ' + str(sklearn.metrics.r2_score(y_test, cv_predict)) +
+               'coefficients: ' + '\n' ,
+                fontsize = 5)
+
+
+    if not os.getcwd().__contains__("Graphs & Photos"):
+        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+    plt.savefig(pic_name + '.png')
+    plt.show()
 
 
 
