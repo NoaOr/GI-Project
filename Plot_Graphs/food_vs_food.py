@@ -26,25 +26,29 @@ if __name__ == '__main__':
 
     gi_usda_df = gi_usda_df.transpose()
 
-    # os.chdir(os.getcwd()[:os.getcwd().index("Plot_Graphs")] + "Excel_files")
-    # distances = pd.read_excel("Euclidean_distance_without_names_in_rows.xlsx")
-    #
-    # distances[distances > 1500] = 1500
-
     writer = pd.ExcelWriter('trans_df.xlsx', engine='xlsxwriter')
     gi_usda_df.to_excel(writer, sheet_name='Sheet1')
     writer.save()
 
     rows_corr = gi_usda_df.corr()
+
+    #remove first row and first col
+    #rows_corr = rows_corr.iloc[1:]
+    # writer = pd.ExcelWriter('corr_df.xlsx', engine='xlsxwriter')
+    # rows_corr.to_excel(writer, sheet_name='Sheet1')
+    # writer.save()
+
+    rows_corr.reset_index(drop=True, inplace=True)
     rows_corr.to_csv("rows_correlation.csv")
 
-    #food_groups = pd.read_excel("GI_USDA_CLEAN_FOOD_GROUPS.xlsx")
-    #species = food_groups.pop("FdGrp_desc")
-    #lut = dict(zip(species.unique(), sns.hls_palette(len(set(species.unique())), l=0.5, s=0.8)))
-    #row_colors = species.map(lut)
-    #g = sns.clustermap(rows_corr, row_colors=row_colors, figsize=(13, 13), metric="correlation")
+    food_groups = pd.read_excel("GI_USDA_CLEAN_FOOD_GROUPS.xlsx")
 
-    g = sns.clustermap(rows_corr, figsize=(13, 13), metric="correlation")
+    species = food_groups.pop("FdGrp_desc")
+    lut = dict(zip(species.unique(), sns.hls_palette(len(set(species.unique())), l=0.5, s=0.8)))
+    row_colors = species.map(lut)
+    g = sns.clustermap(rows_corr, row_colors=row_colors, figsize=(13, 13), metric="correlation")
+
+    # g = sns.clustermap(rows_corr, figsize=(13, 13), metric="correlation")
 
 
     # for tick_label in g.ax_heatmap.axes.get_yticklabels():

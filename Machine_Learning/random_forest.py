@@ -201,7 +201,7 @@ def predict(X_train, X_test, y_train, y_test, lables, pic_name1, pic_name2):
 
 def plot_graphs(X_test, y_test, cv_predictions, lables, rf_random, pic_name2):
     # Plot outputs
-
+    plt.clf()
     print("mean absolute error: ", mean_absolute_error(y_test, cv_predictions))
     print("r2 error: ", sklearn.metrics.r2_score(y_test, cv_predictions))
 
