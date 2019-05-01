@@ -39,36 +39,37 @@ def predict(X_train, X_test, y_train, y_test, feaures, pic_name):
     coefficients = [(d, c) for d, c in zip(feaures, linear_regression_model.coef_)]
     coefficients_str = ""
     for a, b in coefficients:
-        coefficients_str += a + ": " + str(b) + ", "
+        coefficients_str += a + ": " + str("%.4f" % b) + ", "
     coefficients_str = coefficients_str[:-2]
 
     print(coefficients_str)
 
     # Plot outputs
+    plt.figure(figsize=(17, 12))
 
-    plt.scatter(X_test['Carbohydrt_(g)'], y_test, color='blue', s = 15)
-    plt.scatter(X_test['Carbohydrt_(g)'], predict, color='red', s = 10)
+    plt.scatter(X_test['Carbohydrt_(g)'], y_test, color='blue', s = 40)
+    plt.scatter(X_test['Carbohydrt_(g)'], predict, color='red', s = 35)
 
     plt.xticks(())
     plt.yticks(())
 
     plt.legend(('GI vlaue', 'predict GI value'),
-               shadow=True, loc=(0.67, 0.85), handlelength=1.5, fontsize=10)
+               shadow=True, loc=(0.75, 0.85), handlelength=1.5, fontsize=20)
 
     font = {'family': 'serif',
             'color': 'black',
             'weight': 'normal',
-            'size': 16,
+            'size': 30,
             }
     plt.title(pic_name, fontdict=font)
     plt.xlabel('Mean absolute Error = ' + str(mean_absolute_error(y_test, predict)) + '\n' +
                 'R2 score = ' + str(sklearn.metrics.r2_score(y_test, predict)) +
                'coefficients: ' + '\n' +
-               coefficients_str, fontsize = 5)
+               coefficients_str, fontsize=15)
 
 
     if not os.getcwd().__contains__("Graphs & Photos"):
         os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
     plt.savefig(pic_name + '.png')
-    plt.show()
+    # plt.show()
 

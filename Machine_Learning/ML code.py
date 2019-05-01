@@ -44,7 +44,7 @@ def split_to_train_test(df):
 
             compared_food = X_train.iloc[j]['Food Description in 1994-96 CSFII']
             row_index = euclidean_df.columns.get_loc(food_name)
-            if euclidean_df.iloc[row_index][compared_food] < 8:
+            if euclidean_df.iloc[row_index][compared_food] < 2:
                 index = X_train.index[X_train['Food Description in 1994-96 CSFII'] == compared_food].tolist()[0]
                 b = X_train.loc[X_train['Food Description in 1994-96 CSFII'] == compared_food]
                 X_test = X_test.append(b, ignore_index=True)
@@ -119,25 +119,25 @@ if __name__ == '__main__':
     # decision tree
     ##########################################################
 
-    # print("Decision tree model:\n")
-    # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test')
+    print("Decision tree model:\n")
+    decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test')
 
     ##########################################################
     # linear regression
     ##########################################################
     #
-    # print("\n\nLinear regression model:\n")
-    # linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo_new_test')
-    # linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test')
-    # linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_lipid_pro_fibe_sug_new_test')
+    print("\n\nLinear regression model:\n")
+    linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo_new_test')
+    linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test')
+    linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_lipid_pro_fibe_sug_new_test')
 
     # ##########################################################
     # # elastic net
     # ##########################################################
 
-    # print("\n\nElastic net model:\n")
-    # print("features: ", list(ml_df.columns.values))
-    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test")
+    print("\n\nElastic net model:\n")
+    print("features: ", list(ml_df.columns.values))
+    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test")
 
     ##########################################################
     # random forest
