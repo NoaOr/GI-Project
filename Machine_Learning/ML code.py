@@ -28,7 +28,7 @@ def measure_performance(X, y, clf, show_accuracy=True, show_classification_repor
         print(metrics.confusion_matrix(y, y_pred), "\n")
 
 
-def split_to_train_test(df):
+def split_to_train_test(df, with_food_groups=0):
     X = df.drop('GI Value', axis=1, inplace=False)
     y = df['GI Value'].values
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=33)
@@ -57,8 +57,42 @@ def split_to_train_test(df):
     print("x_test:", X_test.shape[0])
     print("y_train:", y_train.shape[0])
     print("y_test:", y_test.shape[0])
-    X_train = X_train.drop(['Food Description in 1994-96 CSFII', 'FdGrp_desc'], axis='columns')
-    X_test = X_test.drop(['Food Description in 1994-96 CSFII', 'FdGrp_desc'], axis='columns')
+    X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+
+    if not with_food_groups:
+        X_train = X_train.drop(['FdGrp_desc'], axis='columns')
+        X_test = X_test.drop(['FdGrp_desc'], axis='columns')
+    else:
+        food_groups = {'Dairy and Egg Products' : 1,
+                        'Spices and Herbs' : 2,
+                        'Baby Foods' : 3,
+                        'Fats and Oils' : 4,
+                        'Poultry Products' : 5,
+                        'Soups, Sauces, and Gravies' : 6,
+                        'Sausages and Luncheon Meats' : 7,
+                        'Breakfast Cereals' : 8,
+                        'Fruits and Fruit Juices' : 9,
+                        'Pork Products' : 10,
+                        'Vegetables and Vegetable Products' : 11,
+                        'Nut and Seed Products' : 12,
+                        'Beef Products' :13,
+                        'Beverages': 14,
+                        'Finfish and Shellfish Products' : 15,
+                        'Legumes and Legume Products' : 16,
+                        'Lamb, Veal, and Game Products' : 17,
+                        'Baked Products' : 18,
+                        'Sweets' : 19,
+                        'Cereal Grains and Pasta' : 20,
+                        'Fast Foods' : 21,
+                        'Meals, Entrees, and Side Dishes' : 22,
+                        'Snacks' : 23,
+                        'American Indian/Alaska Native Foods' : 24,
+                        'Restaurant Foods' : 25 }
+        X_train.FdGrp_desc = [food_groups[item] for item in X_train.FdGrp_desc]
+        X_test.FdGrp_desc = [food_groups[item] for item in X_test.FdGrp_desc]
+
+
     return X_train, X_test, y_train, y_test
 
 
@@ -103,7 +137,8 @@ if __name__ == '__main__':
 
 
 
-    X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
+    # X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
+    RF_X_train, RF_X_test, RF_y_train, RF_y_test = split_to_train_test(ml_df, with_food_groups=1)
 
     # X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
     # X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
@@ -119,25 +154,25 @@ if __name__ == '__main__':
     # decision tree
     ##########################################################
 
-    print("Decision tree model:\n")
-    decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test')
+    # print("Decision tree model:\n")
+    # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test')
 
     ##########################################################
     # linear regression
     ##########################################################
-    #
-    print("\n\nLinear regression model:\n")
-    linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo_new_test')
-    linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test')
-    linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_lipid_pro_fibe_sug_new_test')
+
+    # print("\n\nLinear regression model:\n")
+    # linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo_new_test')
+    # linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test')
+    # linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_lipid_pro_fibe_sug_new_test')
 
     # ##########################################################
     # # elastic net
     # ##########################################################
 
-    print("\n\nElastic net model:\n")
-    print("features: ", list(ml_df.columns.values))
-    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test")
+    # print("\n\nElastic net model:\n")
+    # print("features: ", list(ml_df.columns.values))
+    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test")
 
     ##########################################################
     # random forest
@@ -145,7 +180,8 @@ if __name__ == '__main__':
 
 
     print("\n\nRandom Forest model:\n")
-    random_forest.predict(X_train, X_test, y_train, y_test, features, 'RF_variable_importance_new_test', 'Random_Forest_new_test')
+    features.append(('FdGrp_desc'))
+    random_forest.predict(RF_X_train, RF_X_test, RF_y_train, RF_y_test, features, 'RF_variable_importance_new_test_fg', 'Random_Forest_new_test_fg')
 
 
 

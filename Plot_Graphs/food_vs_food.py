@@ -46,7 +46,19 @@ if __name__ == '__main__':
     species = food_groups.pop("FdGrp_desc")
     lut = dict(zip(species.unique(), sns.hls_palette(len(set(species.unique())), l=0.5, s=0.8)))
     row_colors = species.map(lut)
-    g = sns.clustermap(rows_corr, row_colors=row_colors, figsize=(13, 13), metric="correlation")
+    g = sns.clustermap(rows_corr, row_colors=row_colors, figsize=(18, 14), metric="correlation")
+
+    # Draw the legend bar for the classes
+    for label in species.unique():
+        g.ax_col_dendrogram.bar(0, 0, color=lut[label],
+                                label=label, linewidth=0)
+    g.ax_col_dendrogram.legend(loc="center", ncol=4)
+
+    # Adjust the postion of the main colorbar for the heatmap
+    g.cax.set_position([0, 0, .03, .45])
+    # g.cax.set_position([.97, .2, .03, .45])
+
+
 
     # g = sns.clustermap(rows_corr, figsize=(13, 13), metric="correlation")
 
@@ -55,7 +67,6 @@ if __name__ == '__main__':
     #     tick_text = tick_label.get_text()
     #     species_name = species.loc[int(tick_text)]
     #     tick_label.set_color(lut[species_name])
-
     if not os.getcwd().__contains__("Graphs & Photos"):
         os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
-    plt.savefig("food_vs_food" + '.png')
+    plt.savefig("food_vs_food2" + '.png')
