@@ -206,14 +206,16 @@ def plot_graphs(X_test, y_test, cv_predictions, lables, rf_random, pic_name2):
     print("mean absolute error: ", mean_absolute_error(y_test, cv_predictions))
     print("r2 error: ", sklearn.metrics.r2_score(y_test, cv_predictions))
 
-    plt.scatter(X_test['Carbohydrt_(g)'], y_test, color='blue', s=40)
-    plt.scatter(X_test['Carbohydrt_(g)'], cv_predictions, color='red', s=35)
+    plt.scatter(y_test, cv_predictions, color='blue', s=40)
+
+    # plt.scatter(X_test['Carbohydrt_(g)'], y_test, color='blue', s=40)
+    # plt.scatter(X_test['Carbohydrt_(g)'], cv_predictions, color='red', s=35)
 
     plt.xticks(())
     plt.yticks(())
 
-    plt.legend(('GI vlaue', 'predict GI value'),
-               shadow=True, loc=(0.75, 0.85), handlelength=1.5, fontsize=20)
+    # plt.legend(('GI vlaue', 'predict GI value'),
+    #            shadow=True, loc=(0.75, 0.85), handlelength=1.5, fontsize=20)
 
     font = {'family': 'serif',
             'color': 'black',
@@ -221,9 +223,12 @@ def plot_graphs(X_test, y_test, cv_predictions, lables, rf_random, pic_name2):
             'size': 30,
             }
     plt.title(pic_name2, fontdict=font)
-    plt.xlabel('Mean absolute Error = ' + str(mean_absolute_error(y_test, cv_predictions)) + '\n' +
+    plt.xlabel('GI value' + '\n' +
+               'Mean absolute Error = ' + str(mean_absolute_error(y_test, cv_predictions)) + '\n' +
                'R2 score = ' + str(sklearn.metrics.r2_score(y_test, cv_predictions)),
                 fontsize=18)
+    plt.ylabel('Predicted GI value')
+
 
     if not os.getcwd().__contains__("Graphs & Photos"):
         os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")

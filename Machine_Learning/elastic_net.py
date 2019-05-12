@@ -1,5 +1,5 @@
 import sklearn
-
+import numpy as np
 from sklearn.linear_model import ElasticNetCV
 from sklearn.metrics import mean_absolute_error
 import matplotlib.pyplot as plt
@@ -40,14 +40,19 @@ def predict(X_train, X_test, y_train, y_test, features, pic_name):
 def plot_predict(X_test, y_test, predict, coefficients_str, pic_name):
     plt.figure(figsize=(17, 12))
 
-    plt.scatter(X_test['Carbohydrt_(g)'], y_test, color='blue', s=40)
-    plt.scatter(X_test['Carbohydrt_(g)'], predict, color='red', s=35)
+    plt.scatter(y_test, predict, color='blue', s=40)
+
+    # x = np.linspace(0, max(predict) + 10)
+    # plt.plot(x, 'r')
+    # plt.scatter(X_test['Carbohydrt_(g)'], predict, color='red', s=35)
+    plt.xlabel('GI value')
+    plt.ylabel('Predicted GI value')
 
     plt.xticks(())
     plt.yticks(())
 
-    plt.legend(('GI vlaue', 'predict GI value'),
-               shadow=True, loc=(0.75, 0.85), handlelength=1.5, fontsize=20)
+    # plt.legend(('GI vlaue', 'predict GI value'),
+    #            shadow=True, loc=(0.75, 0.85), handlelength=1.5, fontsize=20)
 
     font = {'family': 'serif',
             'color': 'black',
@@ -55,7 +60,8 @@ def plot_predict(X_test, y_test, predict, coefficients_str, pic_name):
             'size': 30,
             }
     plt.title(pic_name, fontdict=font)
-    plt.xlabel('Model Error = ' + str(mean_absolute_error(y_test, predict)) + '\n' +
+    plt.xlabel('GI value'+ '\n' +
+                'Model Error = ' + str(mean_absolute_error(y_test, predict)) + '\n' +
                'R2 score = ' + str(sklearn.metrics.r2_score(y_test, predict)) +
                "coefficients: " + '\n' +
                coefficients_str, fontsize=10)
