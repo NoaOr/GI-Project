@@ -25,34 +25,69 @@ if __name__ == '__main__':
     print(gi_usda_df['Thiamin'].value_counts())
     print ("-------------------------------------------------")
 
-    bins_values = np.arange(0, 10, 0.05)
+    bins_values = np.arange(0, 10, 0.005)
     labels_values = np.arange(0, len(bins_values) - 1, 1)
 
     gi_usda_df['Thiamin_color']=""
     gi_usda_df['Thiamin_color'] = pd.cut(gi_usda_df.Thiamin, bins=bins_values, labels=labels_values)
 
+    gi_usda_df['Selenium_color'] = ""
+    gi_usda_df['Selenium_color'] = pd.cut(gi_usda_df.Selenium, bins=bins_values, labels=labels_values)
 
 
 
 
-    median_df = gi_usda_df.median(skipna=True, numeric_only=True)
-    gi_usda_df['Thiamin_color'] = gi_usda_df['Thiamin_color'].fillna(median_df['Thiamin_color'])
+    median_df2 = gi_usda_df.median(skipna=True)
+    gi_usda_df['Thiamin_color'] = gi_usda_df['Thiamin_color'].fillna(0)
+    gi_usda_df['Selenium_color'] = gi_usda_df['Selenium_color'].fillna(0)
+
 
     thiamin_arr = gi_usda_df['Thiamin_color']
-    writer = pd.ExcelWriter('thiamin.xlsx', engine='xlsxwriter')
-    gi_usda_df.to_excel(writer, sheet_name='Sheet1')
-    writer.save()
+    selenium_arr = gi_usda_df['Selenium_color']
+
+    # writer = pd.ExcelWriter('thiamin.xlsx', engine='xlsxwriter')
+    # gi_usda_df.to_excel(writer, sheet_name='Sheet1')
+    # writer.save()
 
     print(gi_usda_df['Thiamin_color'].value_counts())
 
     c = gi_usda_df['Thiamin_color']
-    plt.scatter(x='Carbohydrt_(g)', y='GI Value', c='Thiamin_color', cmap='viridis')
+    x = gi_usda_df['Carbohydrt_(g)']
+    y = gi_usda_df['GI Value']
+
+    plt.scatter(x=x, y=y, c=c, cmap='tab20')
     plt.xlabel('Carbohydrt_(g)')
     plt.ylabel('GI Value')
+    plt.show()
 
     # fig = category_scatter(x='x', y='y', label_col='label',
     #                        data=df, legend_loc='upper left')
 
+    # font = {'family': 'serif',
+    #         'color': 'black',
+    #         'weight': 'normal',
+    #         'size': 30,
+    #         }
+    # plt.title("Colors by Thiamin", fontdict=font)
     if not os.getcwd().__contains__("Graphs & Photos"):
         os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
     plt.savefig("carbo_vs_gi_by_thiamin" + '.png')
+
+
+
+    c = gi_usda_df['Selenium_color']
+    x = gi_usda_df['Carbohydrt_(g)']
+    y = gi_usda_df['GI Value']
+
+    plt.scatter(x=x, y=y, c=c, cmap='tab20')
+    plt.xlabel('Carbohydrt_(g)')
+    plt.ylabel('GI Value')
+    plt.show()
+
+    # fig = category_scatter(x='x', y='y', label_col='label',
+    #                        data=df, legend_loc='upper left')
+    # plt.title("Colors by Selenium", fontdict=font)
+
+    if not os.getcwd().__contains__("Graphs & Photos"):
+        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+    plt.savefig("carbo_vs_gi_by_selenium" + '.png')
