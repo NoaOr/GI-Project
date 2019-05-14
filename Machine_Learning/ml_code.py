@@ -250,16 +250,25 @@ def run_on_big_food_group():
     # Plot_output.plot_graph(X_test, y_test, predict, pic_name)
     #
 
+def run_without_fill_sugar():
+    os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
+    df = pd.read_excel("GI_USDA_CLEAN_FOOD_GROUPS.xlsx")
+
+    m1 = df['Sugar_Tot_(g)'].isna()
+    m1.index[m1['BoolCol'] == True].tolist()
+
+    print("amit")
 
 
 if __name__ == '__main__':
-    if not os.getcwd().__contains__("Excel_files"):
-        os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
-    ml_df = pd.read_excel("GI_USDA_full.xlsx")
-
-    learn(ml_df)
+    # if not os.getcwd().__contains__("Excel_files"):
+    #     os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
+    # ml_df = pd.read_excel("GI_USDA_full.xlsx")
+    #
+    # learn(ml_df)
 
     # run_on_big_food_group()
+    run_without_fill_sugar()
 
 
 
