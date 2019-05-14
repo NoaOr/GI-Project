@@ -24,17 +24,17 @@ if __name__ == '__main__':
     # carbo vs gi by thiamin
     #############################
 
-    carbo_vs_GI.plot_corr(column_name='Thiamin_(mg)', color_col_name='Thiamin_color',
-              gi_usda_df=gi_usda_df, pic_name='carbo_vs_gi_by_thiamin',
-              title='Carbo vs Gi by Thiamin')
+    # carbo_vs_GI.plot_corr(column_name='Thiamin_(mg)', color_col_name='Thiamin_color',
+    #           gi_usda_df=gi_usda_df, pic_name='carbo_vs_gi_by_thiamin',
+    #           title='Carbo vs Gi by Thiamin')
 
     #############################
     # carbo vs gi by selenium
     #############################
 
-    carbo_vs_GI.plot_corr(column_name='Selenium_(µg)', color_col_name='Selenium_color',
-              gi_usda_df=gi_usda_df, pic_name='carbo_vs_gi_by_selenium',
-              title='Carbo vs Gi by Selenium', range=0.5)
+    # carbo_vs_GI.plot_corr(column_name='Selenium_(µg)', color_col_name='Selenium_color',
+    #           gi_usda_df=gi_usda_df, pic_name='carbo_vs_gi_by_selenium',
+    #           title='Carbo vs Gi by Selenium', range=0.5)
 
 
     #############################
