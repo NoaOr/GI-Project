@@ -6,88 +6,45 @@ import seaborn as sns
 from sklearn import preprocessing
 
 
-if __name__ == '__main__':
-    os.chdir(os.getcwd()[:os.getcwd().index("Plot_Graphs")] + "Excel_files")
-    gi_usda_df = pd.read_excel("test.xlsx")
+def plot_corr(column_name, color_col_name, gi_usda_df, pic_name, title, range=0.005):
+    print(gi_usda_df[column_name].value_counts())
+    print("-------------------------------------------------")
+    max_index = gi_usda_df[column_name].idxmax()
+    max_in_col = gi_usda_df[column_name].values[max_index]
 
-    gi_usda_df = gi_usda_df.drop(['CSFII 1994-96 Food Code',
-                     'source table', 'NDB_No', 'reference food & time period', 'serve Size g',
-                     'available cerbo hydrate', 'GL per serve', 'GI_2', 'acc', 'match-sent',
-                     'GmWt_Desc2', 'GmWt_Desc1', 'Manganese_(mg)',
-                     'GmWt_1', 'GmWt_2', 'Panto_Acid_mg)', 'Choline_Tot_ (mg)', 'FdGrp_desc'], axis='columns')
-
-    median_df = gi_usda_df.median(skipna=True, numeric_only=True)
-    for column in gi_usda_df:
-        if column == "Food Description in 1994-96 CSFII" or column == "FdGrp_desc":
-            continue
-        gi_usda_df[column] = gi_usda_df[column].fillna(median_df[column])
-
-    print(gi_usda_df['Thiamin'].value_counts())
-    print ("-------------------------------------------------")
-
-    bins_values = np.arange(0, 10, 0.005)
+    bins_values = np.arange(0, max_in_col, range)
     labels_values = np.arange(0, len(bins_values) - 1, 1)
 
-    gi_usda_df['Thiamin_color']=""
-    gi_usda_df['Thiamin_color'] = pd.cut(gi_usda_df.Thiamin, bins=bins_values, labels=labels_values)
+    gi_usda_df[color_col_name] = ""
+    gi_usda_df[color_col_name] = pd.cut(gi_usda_df[column_name], bins=bins_values, labels=labels_values)
 
-    gi_usda_df['Selenium_color'] = ""
-    gi_usda_df['Selenium_color'] = pd.cut(gi_usda_df.Selenium, bins=bins_values, labels=labels_values)
+    gi_usda_df[color_col_name] = gi_usda_df[column_name].fillna(max_in_col)
 
+    color_arr = gi_usda_df[color_col_name]
 
-
-
-    median_df2 = gi_usda_df.median(skipna=True)
-    gi_usda_df['Thiamin_color'] = gi_usda_df['Thiamin_color'].fillna(0)
-    gi_usda_df['Selenium_color'] = gi_usda_df['Selenium_color'].fillna(0)
-
-
-    thiamin_arr = gi_usda_df['Thiamin_color']
-    selenium_arr = gi_usda_df['Selenium_color']
-
-    # writer = pd.ExcelWriter('thiamin.xlsx', engine='xlsxwriter')
-    # gi_usda_df.to_excel(writer, sheet_name='Sheet1')
-    # writer.save()
-
-    print(gi_usda_df['Thiamin_color'].value_counts())
-
-    c = gi_usda_df['Thiamin_color']
     x = gi_usda_df['Carbohydrt_(g)']
     y = gi_usda_df['GI Value']
+    plt.figure(figsize=(17, 12))
 
-    plt.scatter(x=x, y=y, c=c, cmap='tab20')
-    plt.xlabel('Carbohydrt_(g)')
-    plt.ylabel('GI Value')
-    plt.show()
-
-    # fig = category_scatter(x='x', y='y', label_col='label',
-    #                        data=df, legend_loc='upper left')
-
-    # font = {'family': 'serif',
-    #         'color': 'black',
-    #         'weight': 'normal',
-    #         'size': 30,
-    #         }
-    # plt.title("Colors by Thiamin", fontdict=font)
-    if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
-    plt.savefig("carbo_vs_gi_by_thiamin" + '.png')
-
-
-
-    c = gi_usda_df['Selenium_color']
-    x = gi_usda_df['Carbohydrt_(g)']
-    y = gi_usda_df['GI Value']
-
-    plt.scatter(x=x, y=y, c=c, cmap='tab20')
-    plt.xlabel('Carbohydrt_(g)')
-    plt.ylabel('GI Value')
-    plt.show()
-
-    # fig = category_scatter(x='x', y='y', label_col='label',
-    #                        data=df, legend_loc='upper left')
-    # plt.title("Colors by Selenium", fontdict=font)
+    plt.scatter(x=x, y=y, c=color_arr, cmap='gist_stern', s=75)
+    font = {'family': 'serif',
+            'color': 'black',
+            'weight': 'normal',
+            'size': 25,
+            }
+    plt.title(title, fontdict=font)
+    font = {'color': 'black',
+            'weight': 'bold',
+            'size': 18,
+            }
+    plt.xlabel("Carbohydrt", fontdict=font)
+    plt.ylabel("GI Value", fontdict=font)
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    cbar = plt.colorbar()
+    cbar.ax.tick_params(labelsize=15)
+    cbar.set_label(column_name, weight='bold', size=18)
 
     if not os.getcwd().__contains__("Graphs & Photos"):
         os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
-    plt.savefig("carbo_vs_gi_by_selenium" + '.png')
+    plt.savefig(pic_name + '.png')
