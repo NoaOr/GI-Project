@@ -1,13 +1,15 @@
+import sklearn
+
 from sklearn import tree
+from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
 import os
 import pandas as pd
 from sklearn import metrics
 import numpy as np
 
-from Machine_Learning import decision_tree, linear_regression, elastic_net, random_forest
 
-
+from Machine_Learning import decision_tree, linear_regression, elastic_net, random_forest, Plot_output
 
 
 def measure_performance(X, y, clf, show_accuracy=True, show_classification_report=True, show_confusion_matrix=True):
@@ -120,21 +122,46 @@ def linear_regression_by_features(features, pic_name):
     linear_regression.predict(X_train, X_test, y_train, y_test, features, pic_name)
 
 if __name__ == '__main__':
+    # os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
+    # df = pd.read_excel("GI_USDA_CLEAN_FOOD_GROUPS.xlsx")
+    #
+    # null_columns = df.columns[df.isnull().any()]
+    # print(df[df["Sugar_Tot_(g)"].isna()]['FdGrp_desc'])
+    #
+    # ml_df = df.drop(['CSFII 1994-96 Food Code',
+    #                  'source table', 'NDB_No', 'reference food & time period', 'serve Size g',
+    #                  'available cerbo hydrate', 'GL per serve', 'GI_2', 'acc', 'match-sent',
+    #                  'GmWt_Desc2', 'GmWt_Desc1', 'Manganese_(mg)',
+    #                  'GmWt_1', 'GmWt_2', 'Panto_Acid_mg)', 'Choline_Tot_ (mg)'], axis='columns')
+    #
+    # median_df = ml_df.median(skipna=True, numeric_only=True)
+    # food_groups_df = pd.read_excel("GI_USDA_CLEAN_FOOD_GROUPS.xlsx")
+    # food_groups = food_groups_df.pop("FdGrp_desc")
+    # food_groups = food_groups.unique()
+    #
+    # # for column in ml_df:
+    # #     if column == "Food Description in 1994-96 CSFII" or column == "FdGrp_desc":
+    # #         continue
+    # #     ml_df[column] = ml_df[column].fillna(median_df[column])
+    #
+    # for food_group in food_groups:
+    #     # foods_by_food_group = ml_df.loc[ml_df.FdGrp_desc == food_group]
+    #     # mean by colums
+    #     # median = foods_by_food_group.mean(axis=0, skipna=True)
+    #     for column in ml_df:
+    #         if column == "Food Description in 1994-96 CSFII" or column == "FdGrp_desc":
+    #             continue
+    #         m1 = (ml_df['FdGrp_desc'] == food_group)
+    #         ml_df.loc[m1, column] = df.loc[m1, column].fillna(df.loc[m1, column].median())
+    #
+    # writer = pd.ExcelWriter('GI_USDA_full.xlsx', engine='xlsxwriter')
+    # ml_df.to_excel(writer, sheet_name='Sheet1')
+    # writer.save()
+    #         # ml_df[column] = ml_df[column].fillna(median_df[column])
+    #
+
     os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
-    df = pd.read_excel("GI_USDA_CLEAN_FOOD_GROUPS.xlsx")
-
-    ml_df = df.drop(['CSFII 1994-96 Food Code',
-                     'source table', 'NDB_No', 'reference food & time period', 'serve Size g',
-                     'available cerbo hydrate', 'GL per serve', 'GI_2', 'acc', 'match-sent',
-                     'GmWt_Desc2', 'GmWt_Desc1', 'Manganese_(mg)',
-                     'GmWt_1', 'GmWt_2', 'Panto_Acid_mg)', 'Choline_Tot_ (mg)'], axis='columns')
-
-    median_df = ml_df.median(skipna=True, numeric_only=True)
-    for column in ml_df:
-        if column == "Food Description in 1994-96 CSFII" or column == "FdGrp_desc":
-            continue
-        ml_df[column] = ml_df[column].fillna(median_df[column])
-
+    ml_df = pd.read_excel("GI_USDA_full.xlsx")
 
 
     X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
@@ -150,22 +177,27 @@ if __name__ == '__main__':
     features.remove('GI Value')
     features.remove('Food Description in 1994-96 CSFII')
     features.remove('FdGrp_desc')
+
+
+    Plot_output.plot_two_cols(x='Carbohydrt_(g)', y='GI Value', df=ml_df, pic_name="carbo_vs_gi")
+
     ##########################################################
     # decision tree
     ##########################################################
 
     # print("Decision tree model:\n")
-    # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test_2')
+    # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test')
 
     ##########################################################
     # linear regression
     ##########################################################
 
-    # print("\n\nLinear regression model:\n")
-    # linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo_new_test_2')
-    # linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test_2')
-    # linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'],
-    #                               'LR_carbo_lipid_pro_fibe_sug_new_test_2')
+    print("\n\nLinear regression model:\n")
+    linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo_new_test')
+    linear_regression_by_features(['Carbohydrt_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_sugar_new_test')
+    linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test')
+    linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'],
+                                  'LR_carbo_lipid_pro_fibe_sug_new_test')
 
     # ##########################################################
     # # elastic net
@@ -173,7 +205,7 @@ if __name__ == '__main__':
 
     print("\n\nElastic net model:\n")
     print("features: ", list(ml_df.columns.values))
-    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test_2")
+    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test")
 
     ##########################################################
     # random forest
@@ -182,7 +214,7 @@ if __name__ == '__main__':
     # print("\n\nRandom Forest model:\n")
     # features.append(('FdGrp_desc'))
     # random_forest.predict(RF_X_train, RF_X_test, RF_y_train, RF_y_test, features,
-    #                       'RF_variable_importance_new_test_fg', 'Random_Forest_new_test_fg_2')
+    #                       'RF_variable_importance_new_test_fg', 'Random_Forest_new_test_fg')
 
 
 

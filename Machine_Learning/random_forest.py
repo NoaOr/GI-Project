@@ -135,6 +135,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import os
 
+from Machine_Learning import Plot_output
+
 
 def predict(X_train, X_test, y_train, y_test, lables, pic_name1, pic_name2):
     # rf = RandomForestRegressor(random_state=42)
@@ -197,40 +199,43 @@ def predict(X_train, X_test, y_train, y_test, lables, pic_name1, pic_name2):
     plt.savefig(pic_name1 + '.png')
 
     plt.close()
-    plot_graphs(X_test, y_test, cv_predictions, lables, rf_random, pic_name2)
 
-def plot_graphs(X_test, y_test, cv_predictions, lables, rf_random, pic_name2):
-    # Plot outputs
-    plt.clf()
-    plt.figure(figsize=(17, 12))
-    print("mean absolute error: ", mean_absolute_error(y_test, cv_predictions))
-    print("r2 error: ", sklearn.metrics.r2_score(y_test, cv_predictions))
+    Plot_output.plot_graph(X_test, y_test, predict, pic_name2)
 
-    plt.scatter(y_test, cv_predictions, color='blue', s=40)
+    # plot_graphs(X_test, y_test, cv_predictions, lables, rf_random, pic_name2)
 
-    # plt.scatter(X_test['Carbohydrt_(g)'], y_test, color='blue', s=40)
-    # plt.scatter(X_test['Carbohydrt_(g)'], cv_predictions, color='red', s=35)
-
-    plt.xticks(())
-    plt.yticks(())
-
-    # plt.legend(('GI vlaue', 'predict GI value'),
-    #            shadow=True, loc=(0.75, 0.85), handlelength=1.5, fontsize=20)
-
-    font = {'family': 'serif',
-            'color': 'black',
-            'weight': 'normal',
-            'size': 30,
-            }
-    plt.title(pic_name2, fontdict=font)
-    plt.xlabel('GI value' + '\n' +
-               'Mean absolute Error = ' + str(mean_absolute_error(y_test, cv_predictions)) + '\n' +
-               'R2 score = ' + str(sklearn.metrics.r2_score(y_test, cv_predictions)),
-                fontsize=18)
-    plt.ylabel('Predicted GI value')
-
-
-    if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
-    plt.savefig(pic_name2 + '.png')
+# def plot_graphs(X_test, y_test, cv_predictions, lables, rf_random, pic_name2):
+#     # Plot outputs
+#     plt.clf()
+#     plt.figure(figsize=(17, 12))
+#     print("mean absolute error: ", mean_absolute_error(y_test, cv_predictions))
+#     print("r2 error: ", sklearn.metrics.r2_score(y_test, cv_predictions))
+#
+#     plt.scatter(y_test, cv_predictions, color='blue', s=40)
+#
+#     # plt.scatter(X_test['Carbohydrt_(g)'], y_test, color='blue', s=40)
+#     # plt.scatter(X_test['Carbohydrt_(g)'], cv_predictions, color='red', s=35)
+#
+#     plt.xticks(())
+#     plt.yticks(())
+#
+#     # plt.legend(('GI vlaue', 'predict GI value'),
+#     #            shadow=True, loc=(0.75, 0.85), handlelength=1.5, fontsize=20)
+#
+#     font = {'family': 'serif',
+#             'color': 'black',
+#             'weight': 'normal',
+#             'size': 30,
+#             }
+#     plt.title(pic_name2, fontdict=font)
+#     plt.xlabel('GI value' + '\n' +
+#                'Mean absolute Error = ' + str(mean_absolute_error(y_test, cv_predictions)) + '\n' +
+#                'R2 score = ' + str(sklearn.metrics.r2_score(y_test, cv_predictions)),
+#                 fontsize=18)
+#     plt.ylabel('Predicted GI value')
+#
+#
+#     if not os.getcwd().__contains__("Graphs & Photos"):
+#         os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+#     plt.savefig(pic_name2 + '.png')
 
