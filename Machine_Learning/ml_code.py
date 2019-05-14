@@ -124,13 +124,13 @@ def linear_regression_by_features(ml_df, features, pic_name):
 
 def learn(ml_df, pic_name=""):
     # X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
-    # RF_X_train, RF_X_test, RF_y_train, RF_y_test = split_to_train_test(ml_df, with_food_groups=1)
+    RF_X_train, RF_X_test, RF_y_train, RF_y_test = split_to_train_test(ml_df, with_food_groups=1)
 
-    X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
-    X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
-    X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
-    X_train = X_train.drop(['FdGrp_desc'], axis='columns')
-    X_test = X_test.drop(['FdGrp_desc'], axis='columns')
+    # X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
+    # X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    # X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    # X_train = X_train.drop(['FdGrp_desc'], axis='columns')
+    # X_test = X_test.drop(['FdGrp_desc'], axis='columns')
 
     features = list(ml_df.columns.values)
     features.remove('GI Value')
@@ -163,18 +163,18 @@ def learn(ml_df, pic_name=""):
     # # elastic net
     # ##########################################################
 
-    print("\n\nElastic net model:\n")
-    print("features: ", list(ml_df.columns.values))
-    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test" + pic_name)
+    # print("\n\nElastic net model:\n")
+    # print("features: ", list(ml_df.columns.values))
+    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test" + pic_name)
 
     ##########################################################
     # random forest
     ##########################################################
 
-    # print("\n\nRandom Forest model:\n")
-    # features.append(('FdGrp_desc'))
-    # random_forest.predict(RF_X_train, RF_X_test, RF_y_train, RF_y_test, features,
-    #                       'RF_variable_importance_new_test_fg' + pic_name, 'Random_Forest_new_test_fg'+ pic_name)
+    print("\n\nRandom Forest model:\n")
+    features.append(('FdGrp_desc'))
+    random_forest.predict(RF_X_train, RF_X_test, RF_y_train, RF_y_test, features,
+                          'RF_variable_importance_new_test_fg' + pic_name, 'Random_Forest_new_test_fg'+ pic_name)
 
 
 
