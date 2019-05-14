@@ -1,7 +1,6 @@
 from fuzzywuzzy import fuzz
 
 
-
 if __name__ == '__main__':
 
     arr = ["Milk, filled, fluid, with blend of hydrogenated vegetable oils",

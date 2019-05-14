@@ -179,66 +179,87 @@ def learn(ml_df, pic_name=""):
 
 
 def run_on_big_food_group():
-    os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
+    if not os.getcwd().__contains__("Excel_files"):
+        os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
     df = pd.read_excel("GI_USDA_full.xlsx")
     test_df = pd.read_excel("GI_USDA_full.xlsx")
 
     print(df['FdGrp_desc'].value_counts())
+    print(df.shape)
+
+    # remove small food groups from df
+    i = 0
+    while i < len(df['FdGrp_desc'].value_counts()):
+        if df['FdGrp_desc'].value_counts()[i] <= 10:
+            fg = df['FdGrp_desc'].value_counts().index[i]
+            df.drop(df[(df['FdGrp_desc'] == fg)].index, inplace=True)
+            print(df.shape)
+        i += 1
 
 
-    biggest_food_group_1 = df['FdGrp_desc'].value_counts().index[0]
-    biggest_food_group_2 = df['FdGrp_desc'].value_counts().index[1]
+    print(df.shape)
 
-    ml_df = df.loc[(df['FdGrp_desc'] == biggest_food_group_1) | (df['FdGrp_desc'] == biggest_food_group_2)]
+    # put in df only biggest food groups
 
-    learn(ml_df, "biggest_fg")
+    # biggest_food_group_1 = df['FdGrp_desc'].value_counts().index[0]
+    # biggest_food_group_2 = df['FdGrp_desc'].value_counts().index[1]
 
-    X_train, X_test, y_train, y_test = get_train_and_test(test_df)
-    X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
-    X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
-    X_train = X_train.drop(['FdGrp_desc'], axis='columns')
-    X_test = X_test.drop(['FdGrp_desc'], axis='columns')
+    # ml_df = df.loc[(df['FdGrp_desc'] == biggest_food_group_1) | (df['FdGrp_desc'] == biggest_food_group_2)]
 
-    features = list(test_df.columns.values)
-    features.remove('GI Value')
-    features.remove('Food Description in 1994-96 CSFII')
-    features.remove('FdGrp_desc')
+    # learn(ml_df, "biggest_fg")
+    learn(df, "without_small_fg")
 
+    ##############################
+    # elastic net
+    #############################
 
-    pic_name = "el_test"
-    model = ElasticNetCV(cv=4)
-    model.fit(X_train, y_train)
-
-    predict = model.predict(X_test)
-    print("mean absolute error: ", mean_absolute_error(y_test, predict))
-    print("r2 error: ", sklearn.metrics.r2_score(y_test, predict))
-    print("alpha: " , model.alpha_)
-    print("alphas: ", model.alphas_)
-    print("iter: ", model.n_iter_)
-
-    x = len(features)
-    y = len(model.coef_)
-    coefficients = [(d, c) for d, c in zip(features, model.coef_)]
-    coefficients_str = ""
-    for a, b in coefficients:
-        coefficients_str += a + ": " + str("%.4f" % b) + "\n"
-    coefficients_str = coefficients_str[:-2]
-
-    print("coef: ", coefficients_str)
-
-    Plot_output.plot_coefficients(coefficients_str, pic_name=pic_name)
-    Plot_output.plot_graph(X_test, y_test, predict, pic_name)
-
+    # X_train, X_test, y_train, y_test = get_train_and_test(test_df)
+    # X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    # X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    # X_train = X_train.drop(['FdGrp_desc'], axis='columns')
+    # X_test = X_test.drop(['FdGrp_desc'], axis='columns')
+    #
+    # features = list(test_df.columns.values)
+    # features.remove('GI Value')
+    # features.remove('Food Description in 1994-96 CSFII')
+    # features.remove('FdGrp_desc')
+    #
+    #
+    # pic_name = "el_test"
+    # model = ElasticNetCV(cv=4)
+    # model.fit(X_train, y_train)
+    #
+    # predict = model.predict(X_test)
+    # print("mean absolute error: ", mean_absolute_error(y_test, predict))
+    # print("r2 error: ", sklearn.metrics.r2_score(y_test, predict))
+    # print("alpha: " , model.alpha_)
+    # print("alphas: ", model.alphas_)
+    # print("iter: ", model.n_iter_)
+    #
+    # x = len(features)
+    # y = len(model.coef_)
+    # coefficients = [(d, c) for d, c in zip(features, model.coef_)]
+    # coefficients_str = ""
+    # for a, b in coefficients:
+    #     coefficients_str += a + ": " + str("%.4f" % b) + "\n"
+    # coefficients_str = coefficients_str[:-2]
+    #
+    # print("coef: ", coefficients_str)
+    #
+    # Plot_output.plot_coefficients(coefficients_str, pic_name=pic_name)
+    # Plot_output.plot_graph(X_test, y_test, predict, pic_name)
+    #
 
 
 
 if __name__ == '__main__':
-    # # os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
-    # # ml_df = pd.read_excel("GI_USDA_full.xlsx")
-    #
-    # learn(ml_df)
+    if not os.getcwd().__contains__("Excel_files"):
+        os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
+    ml_df = pd.read_excel("GI_USDA_full.xlsx")
 
-    run_on_big_food_group()
+    learn(ml_df)
+
+    # run_on_big_food_group()
 
 
 
