@@ -130,7 +130,6 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import RandomizedSearchCV
 import numpy as np
-import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os
@@ -200,7 +199,33 @@ def predict(X_train, X_test, y_train, y_test, lables, pic_name1, pic_name2):
 
     plt.close()
 
-    Plot_output.plot_graph(X_test, y_test, predict, pic_name2)
+    Plot_output.plot_graph(X_test, y_test, cv_predictions, pic_name2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # plot_graphs(X_test, y_test, cv_predictions, lables, rf_random, pic_name2)
 
