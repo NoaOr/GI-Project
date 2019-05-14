@@ -36,7 +36,7 @@ def plot_graph(X_test, y_test, predict, pic_name, coefficients_str=""):
     else:
         plt.xlabel('Carbohydrt' + '\n\n' +
                    'MAE = ' + str("%.3f" % mean_absolute_error(y_test, predict)) +
-                   ' MSE = ' + str(sklearn.metrics.mean_squared_error(y_test, predict)) +
+                   ' MSE = ' + str("%.3f" % sklearn.metrics.mean_squared_error(y_test, predict)) +
                    ' R2 = ' + str("%.3f" % sklearn.metrics.r2_score(y_test, predict)) +
                    " coefficients: " + coefficients_str,
                     fontsize = 20)

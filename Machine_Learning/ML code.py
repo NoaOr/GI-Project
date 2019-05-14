@@ -1,12 +1,13 @@
 import sklearn
 
-from sklearn import tree
-from sklearn.metrics import mean_absolute_error
+from sklearn.linear_model import ElasticNetCV
 from sklearn.model_selection import train_test_split
 import os
 import pandas as pd
 from sklearn import metrics
 import numpy as np
+from sklearn.metrics import mean_absolute_error
+
 
 
 from Machine_Learning import decision_tree, linear_regression, elastic_net, random_forest, Plot_output
@@ -116,70 +117,29 @@ def get_df_by_features(df, features):
 
     return new_df
 
-def linear_regression_by_features(features, pic_name):
+def linear_regression_by_features(ml_df, features, pic_name):
     filter_df = get_df_by_features(ml_df, features)
     X_train, X_test, y_train, y_test = get_train_and_test(filter_df)
     linear_regression.predict(X_train, X_test, y_train, y_test, features, pic_name)
 
-if __name__ == '__main__':
-    # os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
-    # df = pd.read_excel("GI_USDA_CLEAN_FOOD_GROUPS.xlsx")
-    #
-    # null_columns = df.columns[df.isnull().any()]
-    # print(df[df["Sugar_Tot_(g)"].isna()]['FdGrp_desc'])
-    #
-    # ml_df = df.drop(['CSFII 1994-96 Food Code',
-    #                  'source table', 'NDB_No', 'reference food & time period', 'serve Size g',
-    #                  'available cerbo hydrate', 'GL per serve', 'GI_2', 'acc', 'match-sent',
-    #                  'GmWt_Desc2', 'GmWt_Desc1', 'Manganese_(mg)',
-    #                  'GmWt_1', 'GmWt_2', 'Panto_Acid_mg)', 'Choline_Tot_ (mg)'], axis='columns')
-    #
-    # median_df = ml_df.median(skipna=True, numeric_only=True)
-    # food_groups_df = pd.read_excel("GI_USDA_CLEAN_FOOD_GROUPS.xlsx")
-    # food_groups = food_groups_df.pop("FdGrp_desc")
-    # food_groups = food_groups.unique()
-    #
-    # # for column in ml_df:
-    # #     if column == "Food Description in 1994-96 CSFII" or column == "FdGrp_desc":
-    # #         continue
-    # #     ml_df[column] = ml_df[column].fillna(median_df[column])
-    #
-    # for food_group in food_groups:
-    #     # foods_by_food_group = ml_df.loc[ml_df.FdGrp_desc == food_group]
-    #     # mean by colums
-    #     # median = foods_by_food_group.mean(axis=0, skipna=True)
-    #     for column in ml_df:
-    #         if column == "Food Description in 1994-96 CSFII" or column == "FdGrp_desc":
-    #             continue
-    #         m1 = (ml_df['FdGrp_desc'] == food_group)
-    #         ml_df.loc[m1, column] = df.loc[m1, column].fillna(df.loc[m1, column].median())
-    #
-    # writer = pd.ExcelWriter('GI_USDA_full.xlsx', engine='xlsxwriter')
-    # ml_df.to_excel(writer, sheet_name='Sheet1')
-    # writer.save()
-    #         # ml_df[column] = ml_df[column].fillna(median_df[column])
-    #
+def learn(ml_df, pic_name=""):
+    # X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
+    # RF_X_train, RF_X_test, RF_y_train, RF_y_test = split_to_train_test(ml_df, with_food_groups=1)
 
-    os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
-    ml_df = pd.read_excel("GI_USDA_full.xlsx")
-
-
-    X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
-    RF_X_train, RF_X_test, RF_y_train, RF_y_test = split_to_train_test(ml_df, with_food_groups=1)
-
-    # X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
-    # X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
-    # X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
-    # X_train = X_train.drop(['FdGrp_desc'], axis='columns')
-    # X_test = X_test.drop(['FdGrp_desc'], axis='columns')
+    X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
+    X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    X_train = X_train.drop(['FdGrp_desc'], axis='columns')
+    X_test = X_test.drop(['FdGrp_desc'], axis='columns')
 
     features = list(ml_df.columns.values)
     features.remove('GI Value')
     features.remove('Food Description in 1994-96 CSFII')
     features.remove('FdGrp_desc')
 
+    pic_name = "_" + pic_name
 
-    Plot_output.plot_two_cols(x='Carbohydrt_(g)', y='GI Value', df=ml_df, pic_name="carbo_vs_gi")
+    # Plot_output.plot_two_cols(x='Carbohydrt_(g)', y='GI Value', df=ml_df, pic_name="carbo_vs_gi" + pic_name)
 
     ##########################################################
     # decision tree
@@ -192,12 +152,12 @@ if __name__ == '__main__':
     # linear regression
     ##########################################################
 
-    print("\n\nLinear regression model:\n")
-    linear_regression_by_features(['Carbohydrt_(g)'], 'LR_carbo_new_test')
-    linear_regression_by_features(['Carbohydrt_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_sugar_new_test')
-    linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test')
-    linear_regression_by_features(['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'],
-                                  'LR_carbo_lipid_pro_fibe_sug_new_test')
+    # print("\n\nLinear regression model:\n")
+    # linear_regression_by_features(ml_df, ['Carbohydrt_(g)'], 'LR_carbo_new_test')
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_sugar_new_test' + pic_name)
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test'+ pic_name)
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'],
+    #                               'LR_carbo_lipid_pro_fibe_sug_new_test'+ pic_name)
 
     # ##########################################################
     # # elastic net
@@ -205,7 +165,7 @@ if __name__ == '__main__':
 
     print("\n\nElastic net model:\n")
     print("features: ", list(ml_df.columns.values))
-    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test")
+    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test" + pic_name)
 
     ##########################################################
     # random forest
@@ -214,8 +174,71 @@ if __name__ == '__main__':
     # print("\n\nRandom Forest model:\n")
     # features.append(('FdGrp_desc'))
     # random_forest.predict(RF_X_train, RF_X_test, RF_y_train, RF_y_test, features,
-    #                       'RF_variable_importance_new_test_fg', 'Random_Forest_new_test_fg')
+    #                       'RF_variable_importance_new_test_fg' + pic_name, 'Random_Forest_new_test_fg'+ pic_name)
 
+
+
+def run_on_big_food_group():
+    os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
+    df = pd.read_excel("GI_USDA_full.xlsx")
+    test_df = pd.read_excel("GI_USDA_full.xlsx")
+
+    print(df['FdGrp_desc'].value_counts())
+
+
+    biggest_food_group_1 = df['FdGrp_desc'].value_counts().index[0]
+    biggest_food_group_2 = df['FdGrp_desc'].value_counts().index[1]
+
+    ml_df = df.loc[(df['FdGrp_desc'] == biggest_food_group_1) | (df['FdGrp_desc'] == biggest_food_group_2)]
+
+    learn(ml_df, "biggest_fg")
+
+    X_train, X_test, y_train, y_test = get_train_and_test(test_df)
+    X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    X_train = X_train.drop(['FdGrp_desc'], axis='columns')
+    X_test = X_test.drop(['FdGrp_desc'], axis='columns')
+
+    features = list(test_df.columns.values)
+    features.remove('GI Value')
+    features.remove('Food Description in 1994-96 CSFII')
+    features.remove('FdGrp_desc')
+
+
+    pic_name = "el_test"
+    model = ElasticNetCV(cv=4)
+    model.fit(X_train, y_train)
+
+    predict = model.predict(X_test)
+    print("mean absolute error: ", mean_absolute_error(y_test, predict))
+    print("r2 error: ", sklearn.metrics.r2_score(y_test, predict))
+    print("alpha: " , model.alpha_)
+    print("alphas: ", model.alphas_)
+    print("iter: ", model.n_iter_)
+
+    x = len(features)
+    y = len(model.coef_)
+    coefficients = [(d, c) for d, c in zip(features, model.coef_)]
+    coefficients_str = ""
+    for a, b in coefficients:
+        coefficients_str += a + ": " + str("%.4f" % b) + "\n"
+    coefficients_str = coefficients_str[:-2]
+
+    print("coef: ", coefficients_str)
+
+    Plot_output.plot_coefficients(coefficients_str, pic_name=pic_name)
+    Plot_output.plot_graph(X_test, y_test, predict, pic_name)
+
+
+
+
+if __name__ == '__main__':
+    # # os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
+    # # ml_df = pd.read_excel("GI_USDA_full.xlsx")
+    #
+    # learn(ml_df)
+
+    run_on_big_food_group()
 
 
 
