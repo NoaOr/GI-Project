@@ -11,7 +11,17 @@ font = {'family': 'serif',
         }
 
 
-def plot_graph(X_test, y_test, predict, pic_name, coefficients_str=""):
+def plot_graph(X_test, y_test, predict, pic_name, dir, coefficients_str=""):
+    if not os.getcwd().__contains__("Graphs & Photos"):
+        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+
+    if dir != "":
+        path_dir = "./" + dir
+
+        if not os.getcwd().__contains__(dir):
+            if (not os.path.isdir(path_dir)):
+                os.mkdir(dir)
+            os.chdir(dir)
 
     plt.clf()
     plt.figure(figsize=(20, 13))
@@ -31,7 +41,7 @@ def plot_graph(X_test, y_test, predict, pic_name, coefficients_str=""):
     if coefficients_str == "":
         plt.xlabel('Carbohydrt' + '\n\n' +
                    'MAE = ' + str("%.3f" % mean_absolute_error(y_test, predict)) +
-                   ' MSE = ' + str(sklearn.metrics.mean_squared_error(y_test, predict)) +
+                   ' MSE = ' + str("%.3f" % sklearn.metrics.mean_squared_error(y_test, predict)) +
                     ' R2 = ' + str("%.3f" % sklearn.metrics.r2_score(y_test, predict)),
                     fontsize = 20)
     else:
@@ -48,7 +58,17 @@ def plot_graph(X_test, y_test, predict, pic_name, coefficients_str=""):
         os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
     plt.savefig(pic_name + '.png')
 
-def plot_coefficients(coefficients_str, pic_name):
+def plot_coefficients(coefficients_str, pic_name, dir):
+    if dir != "":
+        path_dir = "./" + dir
+        if not os.getcwd().__contains__("Graphs & Photos"):
+            os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+
+        if not os.getcwd().__contains__(dir):
+            if (not os.path.isdir(path_dir)):
+                os.mkdir(dir)
+            os.chdir(dir)
+
     plt.clf()
 
     fig = plt.figure(figsize=(5, 12))

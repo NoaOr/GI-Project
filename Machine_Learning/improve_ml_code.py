@@ -72,6 +72,14 @@ def run_without_fill_sugar(full_df):
 
     ml_code.learn(no_sugar_df, pic_name="no_none_sugar")
 
+def learn_smaller_dataset(df):
+    indexes = df.sample(frac=.50).index
+    df = df.drop(indexes)
+    df.reset_index(drop=True, inplace=True)
+
+    ml_code.learn(df, pic_name="smaller_dataset", dir="smaller_dataset")
+
+
 
 
 if __name__ == '__main__':
@@ -80,6 +88,7 @@ if __name__ == '__main__':
         os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
     df = pd.read_excel("GI_USDA_full.xlsx")
 
-    run_without_fill_sugar(df)
+    # run_without_fill_sugar(df)
     # add_features_to_df(df)
     # run_on_big_food_group()
+    learn_smaller_dataset(df)

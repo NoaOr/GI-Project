@@ -15,7 +15,7 @@ from Machine_Learning import Plot_output
 
 
 
-def predict(X_train, X_test, y_train, y_test, labels, pic_name):
+def predict(X_train, X_test, y_train, y_test, labels, pic_name, dir):
     simple_model = DecisionTreeRegressor(max_depth=10)
     simple_model.fit(X_train, y_train)
     simple_predict = simple_model.predict(X_test)
@@ -44,13 +44,14 @@ def predict(X_train, X_test, y_train, y_test, labels, pic_name):
                     filled=True, rounded=True,
                     special_characters=False)
     graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
-    os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+    if not os.getcwd().__contains__("Graphs & Photos"):
+        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
 
     graph.set_size('"45,20!"')
 
     graph.write_png('DT nodes new test.png')
 
-    Plot_output.plot_graph(X_test, y_test, cv_predict, pic_name)
+    Plot_output.plot_graph(X_test, y_test, cv_predict, pic_name, dir)
 
 
 

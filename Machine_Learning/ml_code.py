@@ -128,7 +128,7 @@ def get_df_by_features(df, features):
     return new_df
 
 
-def linear_regression_by_features(ml_df, features, pic_name):
+def linear_regression_by_features(ml_df, features, pic_name, dir):
     """
     this function performs linear regression learning by certain features.
     :param ml_df: the data
@@ -138,10 +138,10 @@ def linear_regression_by_features(ml_df, features, pic_name):
     """
     filter_df = get_df_by_features(ml_df, features)
     X_train, X_test, y_train, y_test = get_train_and_test(filter_df)
-    linear_regression.predict(X_train, X_test, y_train, y_test, features, pic_name)
+    linear_regression.predict(X_train, X_test, y_train, y_test, features, pic_name, dir)
 
 
-def learn(ml_df, pic_name=""):
+def learn(ml_df, pic_name="", dir=""):
     """
     THe function creates train and test and
      calls the learning models to predict
@@ -163,27 +163,38 @@ def learn(ml_df, pic_name=""):
     features.remove('Food Description in 1994-96 CSFII')
     features.remove('FdGrp_desc')
 
+    # Plot_output.plot_two_cols(x='Carbohydrt_(g)', y='GI Value', df=ml_df, pic_name="carbo_vs_gi" + pic_name)
+
     pic_name = "_" + pic_name
 
-    # Plot_output.plot_two_cols(x='Carbohydrt_(g)', y='GI Value', df=ml_df, pic_name="carbo_vs_gi" + pic_name)
+    ##########################################################
+    # naive model
+    ##########################################################
+
+    print("Naive model:\n")
+    median = ml_df["GI Value"].mean()
+    predict = [median] * len(X_test)
+    Plot_output.plot_graph(X_test, y_test, predict, "naive_model", dir)
 
     ##########################################################
     # decision tree
     ##########################################################
 
-    # print("Decision tree model:\n")
-    # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test' + pic_name)
+    # print("\n\nDecision tree model:\n")
+    # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test' + pic_name, dir)
+
 
     ##########################################################
     # linear regression
     ##########################################################
 
     # print("\n\nLinear regression model:\n")
-    # linear_regression_by_features(ml_df, ['Carbohydrt_(g)'], 'LR_carbo_new_test' + pic_name)
-    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_sugar_new_test' + pic_name)
-    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test'+ pic_name)
+    # linear_regression_by_features(ml_df, ['Carbohydrt_(g)'], 'LR_carbo_new_test' + pic_name, dir)
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_sugar_new_test' + pic_name, dir)
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test'+ pic_name, dir)
     # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'],
-    #                               'LR_carbo_lipid_pro_fibe_sug_new_test'+ pic_name)
+    #                               'LR_carbo_lipid_pro_fibe_sug_new_test'+ pic_name, dir)
+
 
     # ##########################################################
     # # elastic net
@@ -191,16 +202,16 @@ def learn(ml_df, pic_name=""):
 
     # print("\n\nElastic net model:\n")
     # print("features: ", list(ml_df.columns.values))
-    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test" + pic_name)
+    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test" + pic_name, dir)
 
     ##########################################################
     # random forest
     ##########################################################
 
-    print("\n\nRandom Forest model:\n")
-    features.append(('FdGrp_desc'))
-    random_forest.predict(RF_X_train, RF_X_test, RF_y_train, RF_y_test, features,
-                          'RF_variable_importance_new_test_fg' + pic_name, 'Random_Forest_new_test_fg'+ pic_name)
+    # print("\n\nRandom Forest model:\n")
+    # features.append(('FdGrp_desc'))
+    # random_forest.predict(RF_X_train, RF_X_test, RF_y_train, RF_y_test, features,
+    #                       'RF_variable_importance_new_test_fg' + pic_name, 'Random_Forest_new_test_fg'+ pic_name, dir)
 
 
 if __name__ == '__main__':
