@@ -171,27 +171,27 @@ def learn(ml_df, pic_name=""):
     # decision tree
     ##########################################################
 
-    print("Decision tree model:\n")
-    decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test' + pic_name)
+    # print("Decision tree model:\n")
+    # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test' + pic_name)
 
     ##########################################################
     # linear regression
     ##########################################################
 
-    print("\n\nLinear regression model:\n")
-    linear_regression_by_features(ml_df, ['Carbohydrt_(g)'], 'LR_carbo_new_test' + pic_name)
-    linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_sugar_new_test' + pic_name)
-    linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test'+ pic_name)
-    linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'],
-                                  'LR_carbo_lipid_pro_fibe_sug_new_test'+ pic_name)
+    # print("\n\nLinear regression model:\n")
+    # linear_regression_by_features(ml_df, ['Carbohydrt_(g)'], 'LR_carbo_new_test' + pic_name)
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_sugar_new_test' + pic_name)
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test'+ pic_name)
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'],
+    #                               'LR_carbo_lipid_pro_fibe_sug_new_test'+ pic_name)
 
     # ##########################################################
     # # elastic net
     # ##########################################################
 
-    print("\n\nElastic net model:\n")
-    print("features: ", list(ml_df.columns.values))
-    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test" + pic_name)
+    # print("\n\nElastic net model:\n")
+    # print("features: ", list(ml_df.columns.values))
+    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test" + pic_name)
 
     ##########################################################
     # random forest
