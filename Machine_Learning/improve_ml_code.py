@@ -34,8 +34,8 @@ def run_on_big_food_group():
     # ml_df = df.loc[(df['FdGrp_desc'] == biggest_food_group_1) | (df['FdGrp_desc'] == biggest_food_group_2)]
 
     # learn(ml_df, "biggest_fg")
-    ml_code.learn(df, "without_small_fg")
-
+    # ml_code.learn(df, "without_small_fg")
+    return df
 
 def insert_to_ratio_column(df, origin_column, ratio_column):
     df[ratio_column] = ""
@@ -56,8 +56,8 @@ def add_features_to_df(origin_df):
     new_df = insert_to_ratio_column(new_df, 'Lipid_Tot_(g)', 'carbo-lipid')
     new_df = insert_to_ratio_column(new_df, 'Fiber_TD_(g)', 'carbo-fiber_(availableCarbo)')
 
-    ml_code.learn(new_df, pic_name="with_new_ftrs")
-
+    # ml_code.learn(new_df, pic_name="with_new_ftrs")
+    return new_df
 
 def run_without_fill_sugar(full_df):
     # get the indices of places that sugar doesnt appear in
@@ -70,14 +70,16 @@ def run_without_fill_sugar(full_df):
     print(full_df.shape)
     print(no_sugar_df.shape)
 
-    ml_code.learn(no_sugar_df, pic_name="no_none_sugar")
+    return no_sugar_df
+    # ml_code.learn(no_sugar_df, pic_name="no_none_sugar")
 
 def learn_smaller_dataset(df):
     indexes = df.sample(frac=.50).index
     df = df.drop(indexes)
     df.reset_index(drop=True, inplace=True)
 
-    ml_code.learn(df, pic_name="smaller_dataset", dir="smaller_dataset")
+    return df
+    # ml_code.learn(df, pic_name="smaller_dataset", dir="smaller_dataset")
 
 
 
@@ -88,7 +90,8 @@ if __name__ == '__main__':
         os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
     df = pd.read_excel("GI_USDA_full.xlsx")
 
-    # run_without_fill_sugar(df)
-    # add_features_to_df(df)
+    df = run_without_fill_sugar(df)
+    df = add_features_to_df(df)
     # run_on_big_food_group()
-    learn_smaller_dataset(df)
+    # learn_smaller_dataset(df)
+    ml_code.learn(df, "features_&_no_sugar", dir='rf_improve')
