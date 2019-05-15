@@ -31,7 +31,7 @@ def plot_corr(gi_usda_df):
     # remove small food groups from df
     i = 0
     while i < len(gi_usda_df['FdGrp_desc'].value_counts()):
-        if gi_usda_df['FdGrp_desc'].value_counts()[i] <= 10:
+        if gi_usda_df['FdGrp_desc'].value_counts()[i] <= 50:
             fg = gi_usda_df['FdGrp_desc'].value_counts().index[i]
             gi_usda_df.drop(gi_usda_df[(gi_usda_df['FdGrp_desc'] == fg)].index, inplace=True)
             # print(gi_usda_df.shape)

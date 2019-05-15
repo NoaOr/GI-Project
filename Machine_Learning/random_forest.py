@@ -137,7 +137,7 @@ import os
 from Machine_Learning import Plot_output
 
 
-def predict(X_train, X_test, y_train, y_test, lables, pic_name1, pic_name2):
+def predict(X_train, X_test, y_train, y_test, lables, pic_name1, pic_name2, dir):
     # rf = RandomForestRegressor(random_state=42)
     #
     # print("parameters currently in use by rnadom forest: ")
@@ -199,7 +199,7 @@ def predict(X_train, X_test, y_train, y_test, lables, pic_name1, pic_name2):
 
     plt.close()
 
-    Plot_output.plot_graph(X_test, y_test, cv_predictions, pic_name2)
+    Plot_output.plot_graph(X_test, y_test, cv_predictions, pic_name2, dir)
 
 
 

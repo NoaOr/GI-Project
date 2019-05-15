@@ -29,7 +29,7 @@ def kf_cv(X_train, y_train, model):
     return model
 
 
-def predict(X_train, X_test, y_train, y_test, feaures, pic_name):
+def predict(X_train, X_test, y_train, y_test, feaures, pic_name, dir):
     linear_regression_model = linear_model.LinearRegression()
     linear_regression_model.fit(X_train, y_train)
 
@@ -47,4 +47,4 @@ def predict(X_train, X_test, y_train, y_test, feaures, pic_name):
 
     print(coefficients_str)
 
-    Plot_output.plot_graph(X_test, y_test, predict, pic_name, coefficients_str)
+    Plot_output.plot_graph(X_test, y_test, predict, pic_name, dir, coefficients_str)
