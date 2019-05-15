@@ -39,19 +39,20 @@ def predict(X_train, X_test, y_train, y_test, labels, pic_name, dir):
     print("r2 error(cv): ", sklearn.metrics.r2_score(y_test, cv_predict))
 
 
-    dot_data = StringIO()
-    export_graphviz(DTL_model, out_file=dot_data,feature_names=labels,
-                    filled=True, rounded=True,
-                    special_characters=False)
-    graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
-    if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
-
-    graph.set_size('"45,20!"')
-
-    graph.write_png('DT nodes new test.png')
+    # dot_data = StringIO()
+    # export_graphviz(DTL_model, out_file=dot_data,feature_names=labels,
+    #                 filled=True, rounded=True,
+    #                 special_characters=False)
+    # graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+    # if not os.getcwd().__contains__("Graphs & Photos"):
+    #     os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+    #
+    # graph.set_size('"45,20!"')
+    #
+    # graph.write_png('DT nodes new test.png')
 
     Plot_output.plot_graph(X_test, y_test, cv_predict, pic_name, dir)
+    Plot_output.plot_DT_nodes(DTL_model, labels, dir)
 
 
 

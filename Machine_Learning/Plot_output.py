@@ -1,8 +1,13 @@
 import matplotlib.pyplot as plt
+import pydotplus
 import sklearn
 from sklearn.metrics import mean_absolute_error
 import os
 import matplotlib.patheffects as path_effects
+from sklearn.tree import export_graphviz
+from sklearn.externals.six import StringIO
+import seaborn as sns
+import numpy as np
 
 font = {'family': 'serif',
         'color': 'black',
@@ -59,10 +64,11 @@ def plot_graph(X_test, y_test, predict, pic_name, dir, coefficients_str=""):
     plt.savefig(pic_name + '.png')
 
 def plot_coefficients(coefficients_str, pic_name, dir):
+    if not os.getcwd().__contains__("Graphs & Photos"):
+        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+
     if dir != "":
         path_dir = "./" + dir
-        if not os.getcwd().__contains__("Graphs & Photos"):
-            os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
 
         if not os.getcwd().__contains__(dir):
             if (not os.path.isdir(path_dir)):
@@ -82,7 +88,18 @@ def plot_coefficients(coefficients_str, pic_name, dir):
     pic_name = "coefficients_" + pic_name
     plt.savefig(pic_name + '.png')
 
-def plot_two_cols(x, y, df, pic_name):
+def plot_two_cols(x, y, df, pic_name, dir):
+    if not os.getcwd().__contains__("Graphs & Photos"):
+        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+
+    if dir != "":
+        path_dir = "./" + dir
+
+        if not os.getcwd().__contains__(dir):
+            if (not os.path.isdir(path_dir)):
+                os.mkdir(dir)
+            os.chdir(dir)
+
     plt.clf()
     plt.figure(figsize=(20, 13))
 
@@ -96,8 +113,62 @@ def plot_two_cols(x, y, df, pic_name):
     plt.xlabel(x, fontsize=20)
     plt.ylabel(y, fontsize=20)
 
+    plt.savefig(pic_name + '.png')
+
+
+def plot_DT_nodes(DTL_model, labels, dir):
     if not os.getcwd().__contains__("Graphs & Photos"):
         os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
-    plt.savefig(pic_name + '.png')
+
+    if dir != "":
+        path_dir = "./" + dir
+
+        if not os.getcwd().__contains__(dir):
+            if (not os.path.isdir(path_dir)):
+                os.mkdir(dir)
+            os.chdir(dir)
+
+    dot_data = StringIO()
+    export_graphviz(DTL_model, out_file=dot_data, feature_names=labels,
+                    filled=True, rounded=True,
+                    special_characters=False)
+    graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+
+    graph.set_size('"45,20!"')
+
+    graph.write_png('DT nodes new test.png')
+
+
+def plot_variable_importance(best_random, lables, pic_name1, dir):
+    if not os.getcwd().__contains__("Graphs & Photos"):
+        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+
+    if dir != "":
+        path_dir = "./" + dir
+
+        if not os.getcwd().__contains__(dir):
+            if (not os.path.isdir(path_dir)):
+                os.mkdir(dir)
+            os.chdir(dir)
+
+    feature_imp = best_random.feature_importances_
+
+    features_dict = dict(zip(lables, feature_imp))
+    print(features_dict)
+
+    indices = np.argsort(feature_imp)
+
+    plt.title('Random Forest - Feature Importance')
+
+    sns.barplot(x=feature_imp, y=lables)
+    # Add labels to your graph
+    plt.xlabel('Feature Importance Score')
+    plt.ylabel('Features')
+    # plt.title("Visualizing Important Features")
+    plt.legend()
+    plt.gcf().set_size_inches(15, 9.3, forward=True)
+    plt.savefig(pic_name1 + '.png')
+
+    plt.close()
 
 

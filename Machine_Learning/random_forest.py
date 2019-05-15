@@ -177,29 +177,30 @@ def predict(X_train, X_test, y_train, y_test, lables, pic_name1, pic_name2, dir)
     print("final cv random forest model error: ", mean_absolute_error(y_test, cv_predictions))
 
     best_random = rf_random.best_estimator_
-    feature_imp = best_random.feature_importances_
-
-    features_dict = dict(zip(lables, feature_imp))
-    print(features_dict)
-
-    indices = np.argsort(feature_imp)
-
-    plt.title('Random Forest - Feature Importance')
-
-    sns.barplot(x=feature_imp, y=lables)
-    # Add labels to your graph
-    plt.xlabel('Feature Importance Score')
-    plt.ylabel('Features')
-    # plt.title("Visualizing Important Features")
-    plt.legend()
-    plt.gcf().set_size_inches(15, 9.3, forward=True)
-    if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
-    plt.savefig(pic_name1 + '.png')
-
-    plt.close()
+    # feature_imp = best_random.feature_importances_
+    #
+    # features_dict = dict(zip(lables, feature_imp))
+    # print(features_dict)
+    #
+    # indices = np.argsort(feature_imp)
+    #
+    # plt.title('Random Forest - Feature Importance')
+    #
+    # sns.barplot(x=feature_imp, y=lables)
+    # # Add labels to your graph
+    # plt.xlabel('Feature Importance Score')
+    # plt.ylabel('Features')
+    # # plt.title("Visualizing Important Features")
+    # plt.legend()
+    # plt.gcf().set_size_inches(15, 9.3, forward=True)
+    # if not os.getcwd().__contains__("Graphs & Photos"):
+    #     os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+    # plt.savefig(pic_name1 + '.png')
+    #
+    # plt.close()
 
     Plot_output.plot_graph(X_test, y_test, cv_predictions, pic_name2, dir)
+    Plot_output.plot_variable_importance(best_random, lables, pic_name1, dir)
 
 
 
