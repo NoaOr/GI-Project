@@ -71,7 +71,7 @@ def add_features_to_df(origin_df):
     new_df = insert_carbo_ratio(new_df, 'Fiber_TD_(g)', 'carbo-fiber_(availableCarbo)')
     new_df = insert_water_ratio(new_df, ratio_column='Water_(g)', column_1='Carbohydrt_(g)',
                                 column_2='Lipid_Tot_(g)', column_3='Protein_(g)',
-                                column_4='Water_(g)')
+                                column_4='Water_(g)', new_column='water:CLPW')
 
     # ml_code.learn(new_df, pic_name="with_new_ftrs")
     return new_df
