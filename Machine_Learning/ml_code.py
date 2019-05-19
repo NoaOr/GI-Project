@@ -177,38 +177,38 @@ def learn(ml_df, pic_name="", dir=""):
     # naive model
     ##########################################################
 
-    print("Naive model:\n")
-    median = ml_df["GI Value"].mean()
-    predict = [median] * len(X_test)
-    Plot_output.plot_graph(X_test, y_test, predict, "naive_model", dir)
+    # print("Naive model:\n")
+    # median = ml_df["GI Value"].mean()
+    # predict = [median] * len(X_test)
+    # Plot_output.plot_graph(X_test, y_test, predict, "naive_model", dir)
 
     ##########################################################
     # decision tree
     ##########################################################
 
-    print("\n\nDecision tree model:\n")
-    decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test' + pic_name, dir)
+    # print("\n\nDecision tree model:\n")
+    # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test' + pic_name, dir)
 
 
     ##########################################################
     # linear regression
     ##########################################################
 
-    print("\n\nLinear regression model:\n")
-    linear_regression_by_features(ml_df, ['Carbohydrt_(g)'], 'LR_carbo_new_test' + pic_name, dir)
-    linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_sugar_new_test' + pic_name, dir)
-    linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test'+ pic_name, dir)
-    linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'],
-                                  'LR_carbo_lipid_pro_fibe_sug_new_test'+ pic_name, dir)
+    # print("\n\nLinear regression model:\n")
+    # linear_regression_by_features(ml_df, ['Carbohydrt_(g)'], 'LR_carbo_new_test' + pic_name, dir)
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_sugar_new_test' + pic_name, dir)
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test'+ pic_name, dir)
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'],
+    #                               'LR_carbo_lipid_pro_fibe_sug_new_test'+ pic_name, dir)
 
 
     # ##########################################################
     # # elastic net
     # ##########################################################
 
-    print("\n\nElastic net model:\n")
-    print("features: ", list(ml_df.columns.values))
-    elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test" + pic_name, dir)
+    # print("\n\nElastic net model:\n")
+    # print("features: ", list(ml_df.columns.values))
+    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test" + pic_name, dir)
 
     ##########################################################
     # random forest

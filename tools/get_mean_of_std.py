@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import os
 
 
@@ -13,19 +14,23 @@ if __name__ == '__main__':
     # x = df.mean(skipna=True, axis=0)
     # print(x)
 
-    df['std'] = df['item'].str.split(" ").str[1]
+    # df['std'] = df['item'].str.split(" ").str[1]
 
-    # df['std'] = df['GI (Glucose = 100)'].str.split('1').str[1]
+    df['std'] = df['GI (Glucose = 100)'].str.split('±').str[1]
+    print(df.loc[0, 'std'])
+    std_df = list(df['std'])
+    std_df = np.array(std_df).astype(np.float)
+    x = np.nanmean(std_df)
 
-    std_df = pd.DataFrame(df['std'])
-    x = std_df.mean(skipna=True, axis=0)
+
+    # x = df['std'].mean()
     print(x)
 
 
-    print(std_df)
-    mean = pd.DataFrame(std_df['std']).mean(skipna=True)
-    print(mean)
-    print(df['std'])
-    print("Tt")
+    # print(std_df)
+    # mean = pd.DataFrame(std_df['std']).mean(skipna=True)
+    # print(mean)
+    # print(df['std'])
+    # print("Tt")
     # df['std'] = df['location'].str.split(',').str[0]‏
 
