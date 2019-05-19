@@ -37,7 +37,7 @@ def run_on_big_food_group():
     # ml_code.learn(df, "without_small_fg")
     return df
 
-def insert_to_ratio_column(df, origin_column, ratio_column):
+def insert_carbo_ratio(df, origin_column, ratio_column):
     df[ratio_column] = ""
     for index, row in df.iterrows():
         carbo_val = df.at[index,'Carbohydrt_(g)']
@@ -49,12 +49,29 @@ def insert_to_ratio_column(df, origin_column, ratio_column):
     return df
 
 
+def insert_water_ratio(df, ratio_column, column_1, column_2,
+                       column_3, column_4, new_column):
+    df[new_column] = ""
+    for index, row in df.iterrows():
+        numerator = df.at[index, ratio_column]
+        denominator = df.at[index, column_1] + df.at[index, column_2] + \
+                      df.at[index, column_3] + df.at[index, column_4]
+        if denominator == 0:
+            denominator = sys.float_info.epsilon
+        df.loc[index, new_column] = round(numerator / denominator, 3)
+
+    return df
+
+
 def add_features_to_df(origin_df):
     new_df = origin_df.copy()
 
-    new_df = insert_to_ratio_column(new_df, 'Protein_(g)', 'carbo-protein')
-    new_df = insert_to_ratio_column(new_df, 'Lipid_Tot_(g)', 'carbo-lipid')
-    new_df = insert_to_ratio_column(new_df, 'Fiber_TD_(g)', 'carbo-fiber_(availableCarbo)')
+    new_df = insert_carbo_ratio(new_df, 'Protein_(g)', 'carbo-protein')
+    new_df = insert_carbo_ratio(new_df, 'Lipid_Tot_(g)', 'carbo-lipid')
+    new_df = insert_carbo_ratio(new_df, 'Fiber_TD_(g)', 'carbo-fiber_(availableCarbo)')
+    new_df = insert_water_ratio(new_df, ratio_column='Water_(g)', column_1='Carbohydrt_(g)',
+                                column_2='Lipid_Tot_(g)', column_3='Protein_(g)',
+                                column_4='Water_(g)')
 
     # ml_code.learn(new_df, pic_name="with_new_ftrs")
     return new_df
