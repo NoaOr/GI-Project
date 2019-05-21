@@ -3,6 +3,8 @@ import pandas as pd
 from Machine_Learning import ml_code
 import sys
 import numpy as np
+from numpy.lib.scimath import logn
+from math import e
 
 
 def run_on_big_food_group():
@@ -99,6 +101,31 @@ def learn_smaller_dataset(df):
     # ml_code.learn(df, pic_name="smaller_dataset", dir="smaller_dataset")
 
 
+def add_ln_features(df):
+    # for col in df:
+    #     if col == 'Food Description in 1994-96 CSFII' or col == 'GI Value' \
+    #             or col == 'FdGrp_desc':
+    #         continue
+    #     col_name = col + '_ln'
+    #     df[col_name] = ""
+    #     for index, row in df.iterrows():
+    #         a =
+    #         df.loc[col_name] = logn(e, df.at[index, col])
+    #
+    # return df
+    df_copy = df.copy()
+    df_copy.replace(0, sys.float_info.epsilon)
+
+    for col in df:
+
+        if col == 'Food Description in 1994-96 CSFII' or col == 'GI Value' \
+                or col == 'FdGrp_desc':
+            continue
+        col_name = col + '_ln'
+        df[col_name] = np.log(df_copy[col])
+        print(df[col_name])
+
+    return df
 
 
 if __name__ == '__main__':
@@ -108,7 +135,10 @@ if __name__ == '__main__':
     df = pd.read_excel("GI_USDA_full.xlsx")
 
     df = run_without_fill_sugar(df)
+    df = add_ln_features(df)
     df = add_features_to_df(df)
+
     # run_on_big_food_group()
     # learn_smaller_dataset(df)
+
     ml_code.learn(df, "features_&_no_sugar", dir='rf_improve')
