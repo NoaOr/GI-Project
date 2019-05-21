@@ -8,6 +8,7 @@ from sklearn.tree import export_graphviz
 from sklearn.externals.six import StringIO
 import seaborn as sns
 import numpy as np
+import math
 
 font = {'family': 'serif',
         'color': 'black',
@@ -51,14 +52,14 @@ def plot_graph(X_test, y_test, predict, pic_name, dir, coefficients_str=""):
         # plt.xlabel('Carbohydrt' + '\n\n' +
         plt.xlabel('Measured GI' + '\n\n' +
                    'MAE = ' + str("%.3f" % mean_absolute_error(y_test, predict)) +
-                   ' MSE = ' + str("%.3f" % sklearn.metrics.mean_squared_error(y_test, predict)) +
+                   ' RMSE = ' + str("%.3f" % math.sqrt(sklearn.metrics.mean_squared_error(y_test, predict))) +
                     ' R2 = ' + str("%.3f" % sklearn.metrics.r2_score(y_test, predict)),
                     fontsize = 20)
     else:
         # plt.xlabel('Carbohydrt' + '\n\n' +
         plt.xlabel('Measured GI' + '\n\n' +
                    'MAE = ' + str("%.3f" % mean_absolute_error(y_test, predict)) +
-                   ' MSE = ' + str("%.3f" % sklearn.metrics.mean_squared_error(y_test, predict)) +
+                   ' RMSE = ' + str("%.3f" % math.sqrt(sklearn.metrics.mean_squared_error(y_test, predict))) +
                    ' R2 = ' + str("%.3f" % sklearn.metrics.r2_score(y_test, predict)) +
                    " coefficients: " + coefficients_str,
                     fontsize = 20)

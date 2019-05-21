@@ -152,11 +152,18 @@ def learn(ml_df, pic_name="", dir=""):
     # X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
     RF_X_train, RF_X_test, RF_y_train, RF_y_test = split_to_train_test(ml_df, with_food_groups=1)
 
+    ##########################################################
+    # test on train
+    ##########################################################
 
     # X_test = X_train
     # y_test = y_train
     # RF_X_test = RF_X_train
     # RF_y_test = RF_y_train
+
+    ##########################################################
+    # separate train and test randomly
+    ##########################################################
 
     # X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
     # X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
@@ -187,7 +194,7 @@ def learn(ml_df, pic_name="", dir=""):
     ##########################################################
 
     # print("\n\nDecision tree model:\n")
-    # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree_new_test' + pic_name, dir)
+    # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree' + pic_name, dir)
 
 
     ##########################################################
@@ -195,11 +202,11 @@ def learn(ml_df, pic_name="", dir=""):
     ##########################################################
 
     # print("\n\nLinear regression model:\n")
-    # linear_regression_by_features(ml_df, ['Carbohydrt_(g)'], 'LR_carbo_new_test' + pic_name, dir)
-    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_sugar_new_test' + pic_name, dir)
-    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid_new_test'+ pic_name, dir)
+    # linear_regression_by_features(ml_df, ['Carbohydrt_(g)'], 'LR_carbo' + pic_name, dir)
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Sugar_Tot_(g)'], 'LR_carbo_sugar' + pic_name, dir)
+    # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)'], 'LR_carbo_lipid'+ pic_name, dir)
     # linear_regression_by_features(ml_df,['Carbohydrt_(g)', 'Lipid_Tot_(g)','Protein_(g)', 'Fiber_TD_(g)', 'Sugar_Tot_(g)'],
-    #                               'LR_carbo_lipid_pro_fibe_sug_new_test'+ pic_name, dir)
+    #                               'LR_carbo_lipid_pro_fibe_sug'+ pic_name, dir)
 
 
     # ##########################################################
@@ -208,7 +215,7 @@ def learn(ml_df, pic_name="", dir=""):
 
     # print("\n\nElastic net model:\n")
     # print("features: ", list(ml_df.columns.values))
-    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net_new_test" + pic_name, dir)
+    # elastic_net.predict(X_train, X_test, y_train, y_test, features, "Elastic_net" + pic_name, dir)
 
     ##########################################################
     # random forest
@@ -217,7 +224,7 @@ def learn(ml_df, pic_name="", dir=""):
     print("\n\nRandom Forest model:\n")
     features.append(('FdGrp_desc'))
     random_forest.predict(RF_X_train, RF_X_test, RF_y_train, RF_y_test, features,
-                          'RF_variable_importance_new_test_fg' + pic_name, 'Random_Forest_new_test_fg'+ pic_name, dir)
+                          'RF_variable_importance' + pic_name, 'Random_Forest'+ pic_name, dir)
 
 
 if __name__ == '__main__':
