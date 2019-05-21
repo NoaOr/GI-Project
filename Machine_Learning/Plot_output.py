@@ -88,7 +88,7 @@ def plot_coefficients(coefficients_str, pic_name, dir):
     fig = plt.figure(figsize=(5, 12))
 
     text = fig.text(0.5, 0.5, coefficients_str,
-                    ha='center', va='center', size=15)
+                    ha='center', va='center', size=9)
     text.set_path_effects([path_effects.Normal()])
 
     if not os.getcwd().__contains__("Graphs & Photos"):
@@ -168,7 +168,15 @@ def plot_variable_importance(best_random, lables, pic_name1, dir):
     indices = np.argsort(feature_imp)
 
     plt.title('Random Forest - Feature Importance')
+    # font = {'family': 'serif',
+    #         'color': 'black',
+    #         'weight': 'normal',
+    #         'size': 16,
+    #         }
 
+
+    # sns.set(font_scale=0.5)
+    sns.set_context("paper", rc={"font.size": 8, "axes.titlesize": 8, "axes.labelsize": 5})
     sns.barplot(x=feature_imp, y=lables)
     # Add labels to your graph
     plt.xlabel('Feature Importance Score')

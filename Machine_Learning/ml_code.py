@@ -6,7 +6,8 @@ import pandas as pd
 from sklearn import metrics
 import numpy as np
 from sklearn.metrics import mean_absolute_error
-from Machine_Learning import decision_tree, linear_regression, elastic_net, random_forest, Plot_output
+from Machine_Learning import decision_tree, linear_regression,\
+    elastic_net, random_forest, Plot_output, improve_ml_code
 
 
 def measure_performance(X, y, clf, show_accuracy=True, show_classification_report=True, show_confusion_matrix=True):
@@ -141,7 +142,7 @@ def linear_regression_by_features(ml_df, features, pic_name, dir):
     linear_regression.predict(X_train, X_test, y_train, y_test, features, pic_name, dir)
 
 
-def learn(ml_df, pic_name="", dir=""):
+def learn(ml_df, X_train, X_test, y_train, y_test, RF_X_train, RF_X_test, pic_name="", dir=""):
     """
     THe function creates train and test and
      calls the learning models to predict
@@ -150,7 +151,8 @@ def learn(ml_df, pic_name="", dir=""):
     :return:
     """
     # X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
-    RF_X_train, RF_X_test, RF_y_train, RF_y_test = split_to_train_test(ml_df, with_food_groups=1)
+    # RF_X_train, RF_X_test, RF_y_train, RF_y_test = split_to_train_test(ml_df, with_food_groups=1)
+
 
     ##########################################################
     # test on train
@@ -171,6 +173,7 @@ def learn(ml_df, pic_name="", dir=""):
     # X_train = X_train.drop(['FdGrp_desc'], axis='columns')
     # X_test = X_test.drop(['FdGrp_desc'], axis='columns')
 
+
     features = list(ml_df.columns.values)
     features.remove('GI Value')
     features.remove('Food Description in 1994-96 CSFII')
@@ -189,9 +192,12 @@ def learn(ml_df, pic_name="", dir=""):
     # predict = [median] * len(X_test)
     # Plot_output.plot_graph(X_test, y_test, predict, "naive_model", dir)
 
+
     ##########################################################
     # decision tree
     ##########################################################
+
+
 
     # print("\n\nDecision tree model:\n")
     # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree' + pic_name, dir)
@@ -223,16 +229,27 @@ def learn(ml_df, pic_name="", dir=""):
 
     print("\n\nRandom Forest model:\n")
     features.append(('FdGrp_desc'))
-    random_forest.predict(RF_X_train, RF_X_test, RF_y_train, RF_y_test, features,
+    random_forest.predict(RF_X_train, RF_X_test, y_train, y_test, features,
                           'RF_variable_importance' + pic_name, 'Random_Forest'+ pic_name, dir)
 
 
 if __name__ == '__main__':
     if not os.getcwd().__contains__("Excel_files"):
         os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
-    ml_df = pd.read_excel("GI_USDA_full.xlsx")
 
-    learn(ml_df, dir="check_on_train")
+    ml_df = pd.read_excel("GI_USDA_IMPROVED.xlsx")
+    os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Excel_files/train&test")
+
+    X_train = pd.read_excel("X_train.xlsx")
+    X_test = pd.read_excel("X_test.xlsx")
+    y_train = pd.read_excel("y_train.xlsx").as_matrix()
+    y_train = np.ravel(y_train)
+    y_test = pd.read_excel("y_test.xlsx").as_matrix()
+    y_test = np.ravel(y_test)
+    RF_X_train = pd.read_excel("RF_X_train.xlsx")
+    RF_X_test = pd.read_excel("RF_X_test.xlsx")
+
+    learn(ml_df, X_train, X_test, y_train, y_test, RF_X_train, RF_X_test, pic_name='best_model', dir="best_model")
 
 
 

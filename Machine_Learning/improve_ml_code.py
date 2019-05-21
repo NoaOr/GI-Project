@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from Machine_Learning import ml_code
 import sys
 import numpy as np
 from numpy.lib.scimath import logn
@@ -44,24 +43,24 @@ def insert_carbo_ratio(df, origin_column, ratio_column):
     for index, row in df.iterrows():
         carbo_val = df.at[index,'Carbohydrt_(g)']
         col_val = df.at[index, origin_column]
-        if col_val == 0:
-            col_val = sys.float_info.epsilon
-        df.loc[index, ratio_column] = round(carbo_val / col_val, 3)
+        denominator = col_val + carbo_val
+        df.loc[index, ratio_column] = round(carbo_val / denominator, 3)
 
+    # df.fillna(sys.float_info.epsilon, inplace=True)
+    df.fillna(0, inplace=True)
     return df
 
 
-def insert_water_ratio(df, ratio_column, column_1, column_2,
-                       column_3, column_4, new_column):
+def insert_main_ftrs_ratio(df, main_col, column_1, column_2,
+                           column_3, column_4, new_column):
     df[new_column] = ""
     for index, row in df.iterrows():
-        numerator = df.at[index, ratio_column]
+        numerator = df.at[index, main_col]
         denominator = df.at[index, column_1] + df.at[index, column_2] + \
                       df.at[index, column_3] + df.at[index, column_4]
         if denominator == 0:
             denominator = sys.float_info.epsilon
         df.loc[index, new_column] = round(numerator / denominator, 3)
-
     return df
 
 
@@ -71,9 +70,27 @@ def add_features_to_df(origin_df):
     new_df = insert_carbo_ratio(new_df, 'Protein_(g)', 'carbo-protein')
     new_df = insert_carbo_ratio(new_df, 'Lipid_Tot_(g)', 'carbo-lipid')
     new_df = insert_carbo_ratio(new_df, 'Fiber_TD_(g)', 'carbo-fiber_(availableCarbo)')
-    new_df = insert_water_ratio(new_df, ratio_column='Water_(g)', column_1='Carbohydrt_(g)',
-                                column_2='Lipid_Tot_(g)', column_3='Protein_(g)',
-                                column_4='Water_(g)', new_column='water:CLPW')
+
+    new_df = insert_main_ftrs_ratio(new_df, main_col='Water_(g)', column_1='Carbohydrt_(g)',
+                                    column_2='Lipid_Tot_(g)', column_3='Protein_(g)',
+                                    column_4='Water_(g)', new_column='water:CLPW')
+    new_df = insert_main_ftrs_ratio(new_df, main_col='Carbohydrt_(g)', column_1='Carbohydrt_(g)',
+                                    column_2='Lipid_Tot_(g)', column_3='Protein_(g)',
+                                    column_4='Water_(g)', new_column='carbo:CLPW')
+    new_df = insert_main_ftrs_ratio(new_df, main_col='Lipid_Tot_(g)', column_1='Carbohydrt_(g)',
+                                    column_2='Lipid_Tot_(g)', column_3='Protein_(g)',
+                                    column_4='Water_(g)', new_column='lipidTot:CLPW')
+    new_df = insert_main_ftrs_ratio(new_df, main_col='Protein_(g)', column_1='Carbohydrt_(g)',
+                                    column_2='Lipid_Tot_(g)', column_3='Protein_(g)',
+                                    column_4='Water_(g)', new_column='protein:CLPW')
+    new_df = insert_main_ftrs_ratio(new_df, main_col='Fiber_TD_(g)', column_1='Carbohydrt_(g)',
+                                    column_2='Lipid_Tot_(g)', column_3='Protein_(g)',
+                                    column_4='Water_(g)', new_column='fiber:CLPW')
+    new_df = insert_main_ftrs_ratio(new_df, main_col='carbo-fiber_(availableCarbo)', column_1='Carbohydrt_(g)',
+                                    column_2='Lipid_Tot_(g)', column_3='Protein_(g)',
+                                    column_4='Water_(g)', new_column='availableCarbos:CLPW')
+
+
 
     # ml_code.learn(new_df, pic_name="with_new_ftrs")
     return new_df
@@ -102,17 +119,6 @@ def learn_smaller_dataset(df):
 
 
 def add_ln_features(df):
-    # for col in df:
-    #     if col == 'Food Description in 1994-96 CSFII' or col == 'GI Value' \
-    #             or col == 'FdGrp_desc':
-    #         continue
-    #     col_name = col + '_ln'
-    #     df[col_name] = ""
-    #     for index, row in df.iterrows():
-    #         a =
-    #         df.loc[col_name] = logn(e, df.at[index, col])
-    #
-    # return df
     df_copy = df.copy()
     df_copy.replace(0, sys.float_info.epsilon)
 
@@ -123,13 +129,33 @@ def add_ln_features(df):
             continue
         col_name = col + '_ln'
         df[col_name] = np.log(df_copy[col])
-        print(df[col_name])
+        # print(df[col_name])
 
     return df
 
 
-if __name__ == '__main__':
-
+# if __name__ == '__main__':
+#
+#     if not os.getcwd().__contains__("Excel_files"):
+#         os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
+#     df = pd.read_excel("GI_USDA_full.xlsx")
+#
+#     df = run_without_fill_sugar(df)
+#     df = add_ln_features(df)
+#     df = add_features_to_df(df)
+#
+#     # x = df.isna().any()
+#
+#     df = df.replace([-np.inf], 0).dropna(axis=1)
+#
+#     # run_on_big_food_group()
+#     # learn_smaller_dataset(df)
+#
+#
+#     ml_code.learn(df, "check", dir='check')
+#
+#
+def imporve():
     if not os.getcwd().__contains__("Excel_files"):
         os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
     df = pd.read_excel("GI_USDA_full.xlsx")
@@ -137,8 +163,14 @@ if __name__ == '__main__':
     df = run_without_fill_sugar(df)
     df = add_ln_features(df)
     df = add_features_to_df(df)
+    df = df.replace([-np.inf], 0).dropna(axis=1)
+
+    writer = pd.ExcelWriter('GI_USDA_IMPROVED.xlsx', engine='xlsxwriter')
+    df.to_excel(writer, sheet_name='Sheet1')
+    writer.save()
 
     # run_on_big_food_group()
     # learn_smaller_dataset(df)
 
-    ml_code.learn(df, "best_model", dir='rf_improve')
+
+    return df
