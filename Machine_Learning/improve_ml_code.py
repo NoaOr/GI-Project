@@ -2,11 +2,13 @@ import os
 import pandas as pd
 import sys
 import numpy as np
-from numpy.lib.scimath import logn
-from math import e
 
 
 def run_on_big_food_group():
+    """
+    run the ml code only on the biggest food groups
+    :return:
+    """
     if not os.getcwd().__contains__("Excel_files"):
         os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
     df = pd.read_excel("GI_USDA_full.xlsx")
@@ -38,7 +40,15 @@ def run_on_big_food_group():
     # ml_code.learn(df, "without_small_fg")
     return df
 
+
 def insert_carbo_ratio(df, origin_column, ratio_column):
+    """
+    This function adds features of ratio with crabos to the df
+    :param df:
+    :param origin_column:
+    :param ratio_column:
+    :return: new df
+    """
     df[ratio_column] = ""
     for index, row in df.iterrows():
         carbo_val = df.at[index,'Carbohydrt_(g)']
@@ -53,6 +63,18 @@ def insert_carbo_ratio(df, origin_column, ratio_column):
 
 def insert_main_ftrs_ratio(df, main_col, column_1, column_2,
                            column_3, column_4, new_column):
+    """
+    This function adds features of ratio between main features
+    and important columns.
+    :param df:
+    :param main_col:
+    :param column_1:
+    :param column_2:
+    :param column_3:
+    :param column_4:
+    :param new_column:
+    :return: new df
+    """
     df[new_column] = ""
     for index, row in df.iterrows():
         numerator = df.at[index, main_col]
@@ -65,6 +87,11 @@ def insert_main_ftrs_ratio(df, main_col, column_1, column_2,
 
 
 def add_features_to_df(origin_df):
+    """
+    add features to df
+    :param origin_df:
+    :return: new df
+    """
     new_df = origin_df.copy()
 
     new_df = insert_carbo_ratio(new_df, 'Protein_(g)', 'carbo-protein')
@@ -91,11 +118,14 @@ def add_features_to_df(origin_df):
                                     column_4='Water_(g)', new_column='availableCarbos:CLPW')
 
 
-
-    # ml_code.learn(new_df, pic_name="with_new_ftrs")
     return new_df
 
 def run_without_fill_sugar(full_df):
+    """
+    this function removes the blank lines of sugar
+    :param full_df:
+    :return:
+    """
     # get the indices of places that sugar doesnt appear in
     gi_usda_df = pd.read_excel("GI_USDA_CLEAN_FOOD_GROUPS.xlsx")
     print(gi_usda_df.shape)
@@ -107,18 +137,27 @@ def run_without_fill_sugar(full_df):
     print(no_sugar_df.shape)
 
     return no_sugar_df
-    # ml_code.learn(no_sugar_df, pic_name="no_none_sugar")
+
 
 def learn_smaller_dataset(df):
+    """
+    executing the ml on smaller data set
+    :param df:
+    :return:
+    """
     indexes = df.sample(frac=.50).index
     df = df.drop(indexes)
     df.reset_index(drop=True, inplace=True)
 
     return df
-    # ml_code.learn(df, pic_name="smaller_dataset", dir="smaller_dataset")
 
 
 def add_ln_features(df):
+    """
+    This function adds ln features for each regular feature
+    :param df:
+    :return: new df
+    """
     df_copy = df.copy()
     df_copy.replace(0, sys.float_info.epsilon)
 
@@ -134,28 +173,11 @@ def add_ln_features(df):
     return df
 
 
-# if __name__ == '__main__':
-#
-#     if not os.getcwd().__contains__("Excel_files"):
-#         os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
-#     df = pd.read_excel("GI_USDA_full.xlsx")
-#
-#     df = run_without_fill_sugar(df)
-#     df = add_ln_features(df)
-#     df = add_features_to_df(df)
-#
-#     # x = df.isna().any()
-#
-#     df = df.replace([-np.inf], 0).dropna(axis=1)
-#
-#     # run_on_big_food_group()
-#     # learn_smaller_dataset(df)
-#
-#
-#     ml_code.learn(df, "check", dir='check')
-#
-#
 def imporve():
+    """
+    This function improves the current df
+    :return: new df
+    """
     if not os.getcwd().__contains__("Excel_files"):
         os.chdir(os.getcwd()[:os.getcwd().index("Machine_Learning")] + "Excel_files")
     df = pd.read_excel("GI_USDA_full.xlsx")
@@ -163,6 +185,7 @@ def imporve():
     df = run_without_fill_sugar(df)
     df = add_ln_features(df)
     df = add_features_to_df(df)
+
     df = df.replace([-np.inf], 0).dropna(axis=1)
 
     writer = pd.ExcelWriter('GI_USDA_IMPROVED.xlsx', engine='xlsxwriter')

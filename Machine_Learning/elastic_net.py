@@ -5,6 +5,17 @@ from Machine_Learning import Plot_output
 
 
 def predict(X_train, X_test, y_train, y_test, features, pic_name, dir):
+    """
+    The function predicts the tags of X_test by the elastic net model
+    :param X_train:
+    :param X_test:
+    :param y_train:
+    :param y_test:
+    :param labels:
+    :param pic_name:
+    :param dir:
+    :return:
+    """
     model = ElasticNetCV(cv=4)
     model.fit(X_train, y_train)
 
