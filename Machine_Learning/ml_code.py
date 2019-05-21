@@ -149,14 +149,14 @@ def learn(ml_df, pic_name="", dir=""):
     :param pic_name:
     :return:
     """
-    X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
+    # X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
     RF_X_train, RF_X_test, RF_y_train, RF_y_test = split_to_train_test(ml_df, with_food_groups=1)
 
 
-    X_test = X_train
-    y_test = y_train
-    RF_X_test = RF_X_train
-    RF_y_test = RF_y_train
+    # X_test = X_train
+    # y_test = y_train
+    # RF_X_test = RF_X_train
+    # RF_y_test = RF_y_train
 
     # X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
     # X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')

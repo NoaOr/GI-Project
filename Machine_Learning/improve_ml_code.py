@@ -141,4 +141,4 @@ if __name__ == '__main__':
     # run_on_big_food_group()
     # learn_smaller_dataset(df)
 
-    ml_code.learn(df, "features_&_no_sugar", dir='rf_improve')
+    ml_code.learn(df, "best_model", dir='rf_improve')
