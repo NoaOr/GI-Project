@@ -30,6 +30,17 @@ def kf_cv(X_train, y_train, model):
 
 
 def predict(X_train, X_test, y_train, y_test, feaures, pic_name, dir):
+    """
+    The function predicts the tags of X_test by the linear regression model
+    :param X_train:
+    :param X_test:
+    :param y_train:
+    :param y_test:
+    :param labels:
+    :param pic_name:
+    :param dir:
+    :return:
+    """
     linear_regression_model = linear_model.LinearRegression()
     linear_regression_model.fit(X_train, y_train)
 

@@ -92,6 +92,12 @@ def split_to_train_test():
 
 
 def write_to_file(df, file_name):
+    """
+    THe function writes df to file
+    :param df:
+    :param file_name:
+    :return:
+    """
     writer = pd.ExcelWriter(file_name, engine='xlsxwriter')
     df.to_excel(writer, sheet_name='Sheet1')
     writer.save()
