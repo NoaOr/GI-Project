@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import math
 from scipy.spatial import distance
+from scipy.spatial.distance import pdist, squareform
+
 
 
 def join():
@@ -42,26 +44,20 @@ def handle_nan():
 
 def get_euclidean_matrix(df):
     food_examples = df['food_names']
-    df = df.drop(['food_names'], axis='columns')
+    df = df.drop(['food_names', 'height', 'weight', 'above_range', 'BMI', 'age', 'gender',
+                  'glucose_tolerance_category','90-percentile_of_2h-iAUC', 'average_carbs_ratio',
+                  'average_daily_carbs','average_meals_per_day', 'average_sleep_hours',
+                  'average_glucose', 'baseline', 'coefficient_of_variation', 'max_2-hours_iAUC',
+                  'median_fasting_glucose_level','median_of_2h-iAUC', 'night_baseline'], axis='columns')
 
     df = df.replace([-np.inf], 0).dropna(axis=1)
 
-    # median_df = df.median(skipna=True, numeric_only=True)
-    # for column in df:
-    #     df[column] = df[column].fillna(median_df[column])
-
     num_examples = df.shape[0]
 
-    dis_df = pd.DataFrame(index=food_examples, columns=food_examples)
-    dis_df = dis_df.fillna('-')
+    distances = pdist(df.values, metric='euclidean')
+    dis_array = squareform(distances)
 
-    for food_index in range(num_examples):
-        print(food_index)
-        food = df.iloc[food_index,:]
-        for compare_food_index in range(num_examples):
-            compare_food = df.iloc[compare_food_index,:]
-            dis = distance.euclidean(food, compare_food)
-            dis_df.iloc[food_index, compare_food_index] = dis
+    dis_df = pd.DataFrame(data = dis_array, index=food_examples, columns=food_examples)
 
     writer = pd.ExcelWriter('Euclidean_distance_icarbonx.xlsx', engine='xlsxwriter')
     dis_df.to_excel(writer, sheet_name='Sheet1')
