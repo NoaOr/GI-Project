@@ -19,7 +19,7 @@ font = {'family': 'serif',
 
 def plot_graph(X_test, y_test, predict, pic_name, dir, coefficients_str=""):
     if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+        os.chdir(os.getcwd()[:os.getcwd().index("GI-Project")] + "GI-Project/Graphs & Photos")
 
     if dir != "":
         path_dir = "./" + dir
@@ -73,7 +73,7 @@ def plot_graph(X_test, y_test, predict, pic_name, dir, coefficients_str=""):
 
 def plot_coefficients(coefficients_str, pic_name, dir):
     if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+        os.chdir(os.getcwd()[:os.getcwd().index("GI-Project")] + "GI-Project/Graphs & Photos")
 
     if dir != "":
         path_dir = "./" + dir
@@ -98,7 +98,7 @@ def plot_coefficients(coefficients_str, pic_name, dir):
 
 def plot_two_cols(x, y, df, pic_name, dir):
     if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+        os.chdir(os.getcwd()[:os.getcwd().index("GI-Project")] + "GI-Project/Graphs & Photos")
 
     if dir != "":
         path_dir = "./" + dir
@@ -126,7 +126,7 @@ def plot_two_cols(x, y, df, pic_name, dir):
 
 def plot_DT_nodes(DTL_model, labels, dir):
     if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+        os.chdir(os.getcwd()[:os.getcwd().index("GI-Project")] + "GI-Project/Graphs & Photos")
 
     if dir != "":
         path_dir = "./" + dir
@@ -149,7 +149,7 @@ def plot_DT_nodes(DTL_model, labels, dir):
 
 def plot_variable_importance(best_random, lables, pic_name1, dir):
     if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Graphs & Photos")
+        os.chdir(os.getcwd()[:os.getcwd().index("GI-Project")] + "GI-Project/Graphs & Photos")
 
     if dir != "":
         path_dir = "./" + dir

@@ -167,12 +167,16 @@ def learn(ml_df, pic_name="", dir=""):
     # separate train and test randomly
     ##########################################################
 
+    ml_df = ml_df.replace([-np.inf], 0).dropna(axis=1)
+
     RF_X_train, RF_X_test, y_train, y_test = get_train_and_test(ml_df)
     RF_X_train = RF_X_train.drop(['food_names'], axis='columns')
     RF_X_test = RF_X_test.drop(['food_names'], axis='columns')
     # X_train = X_train.drop(['FdGrp_desc'], axis='columns')
     # X_test = X_test.drop(['FdGrp_desc'], axis='columns')
 
+    X_train = RF_X_train
+    X_test = RF_X_test
 
     features = list(ml_df.columns.values)
     features.remove('2h-iAUC')
