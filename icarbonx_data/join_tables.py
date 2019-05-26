@@ -43,7 +43,15 @@ def handle_nan():
 
 
 def get_euclidean_matrix(df):
-    food_examples = df['food_names']
+    df.reset_index(drop=True, inplace=True)
+
+    foods = df['food_names']
+    food_examples = []
+    indices = list(range(0, len(foods)))
+    for i in indices:
+        food_examples.append(str(foods[i]) + str(i))
+    food_examples = pd.Series(food_examples)
+
     df = df.drop(['food_names', 'height', 'weight', 'above_range', 'BMI', 'age', 'gender',
                   'glucose_tolerance_category','90-percentile_of_2h-iAUC', 'average_carbs_ratio',
                   'average_daily_carbs','average_meals_per_day', 'average_sleep_hours',
@@ -55,16 +63,39 @@ def get_euclidean_matrix(df):
     num_examples = df.shape[0]
 
     distances = pdist(df.values, metric='euclidean')
+    print(distance)
     dis_array = squareform(distances)
-
+    print(dis_array)
     dis_df = pd.DataFrame(data = dis_array, index=food_examples, columns=food_examples)
-
+    print(dis_df)
     writer = pd.ExcelWriter('Euclidean_distance_icarbonx.xlsx', engine='xlsxwriter')
     dis_df.to_excel(writer, sheet_name='Sheet1')
+    writer.save()
+
+
+def change_food_names_in_final_table(df):
+    # df = pd.read_excel("final_dataset_with_median.xlsx")
+    df.reset_index(drop=True, inplace=True)
+
+    foods = df['food_names']
+    food_examples = []
+    indices = list(range(0, len(foods)))
+    for i in indices:
+        print(i)
+        food_examples.append(str(foods[i]) + str(i))
+    food_examples = pd.Series(food_examples)
+
+    df.drop(labels=['food_names'], axis="columns", inplace=True)
+    df['food_names'] = food_examples
+    writer = pd.ExcelWriter('final_dataset_with_median.xlsx', engine='xlsxwriter')
+    df.to_excel(writer, sheet_name='Sheet1')
     writer.save()
 
 if __name__ == '__main__':
     # join()
     # handle_nan()
-    df = pd.read_excel("final_dataset.xlsx")
+    df = pd.read_excel("final_dataset_with_median.xlsx")
+    # df = pd.read_excel("final_dataset.xlsx")
+
     get_euclidean_matrix(df)
+    change_food_names_in_final_table(df)

@@ -22,8 +22,13 @@ def split_to_train_test():
     X_train.reset_index(drop=True, inplace=True)
     X_test.reset_index(drop=True, inplace=True)
     euclidean_df = pd.read_excel("Euclidean_distance_icarbonx.xlsx")
+
+    print("X_train: ", X_train.shape)
+    print("X_test: ", X_test.shape)
+    print("y_train: ", y_train.shape)
+    print("y_test: ", y_test.shape)
     x_test_size = X_test.shape[0]
-    print("x_test_size: ", x_test_size)
+    # print("x_test_size: ", x_test_size)
     for i in range(x_test_size):
         print("________________________________________________")
         print("x_test_row: ", i)
@@ -32,11 +37,13 @@ def split_to_train_test():
             # print("x_train_row: ", j)
 
             if j >= X_train.shape[0]:
+                print(j)
                 break
 
             compared_food = X_train.iloc[j]['food_names']
             row_index = euclidean_df.columns.get_loc(food_name)
-            if euclidean_df.iloc[row_index][compared_food] < 2:
+            if euclidean_df.iloc[row_index][compared_food] < 13:
+
                 index = X_train.index[X_train['food_names'] == compared_food].tolist()[0]
                 b = X_train.loc[X_train['food_names'] == compared_food]
                 X_test = X_test.append(b, ignore_index=True)
@@ -51,13 +58,13 @@ def split_to_train_test():
 
     y_train = pd.DataFrame(y_train)
     y_test = pd.DataFrame(y_test)
-    os.chdir(os.getcwd()[:os.getcwd().index("icarbonx_data")] + "icarbonx_data/train&test")
 
     print("X_train: ", X_train.shape)
     print("X_test: ", X_test.shape)
     print("y_train: ", y_train.shape)
     print("y_test: ", y_test.shape)
 
+    os.chdir(os.getcwd()[:os.getcwd().index("icarbonx_data")] + "icarbonx_data/train&test")
 
     write_to_file(X_train, 'X_train.xlsx')
     write_to_file(X_test, 'X_test.xlsx')
@@ -78,4 +85,5 @@ def write_to_file(df, file_name):
     writer.save()
 
 if __name__ == '__main__':
+
     split_to_train_test()
