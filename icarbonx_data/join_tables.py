@@ -3,7 +3,7 @@ import numpy as np
 import math
 from scipy.spatial import distance
 from scipy.spatial.distance import pdist, squareform
-from icarbonx_data import machine_learning
+from icarbonx_data import machine_learning, train_and_test
 
 
 
@@ -22,11 +22,22 @@ def handle_nan():
     # print(df.isnull().sum())
 
     df = df[pd.notnull(df['food_names'])]
-    median_df = df.median(skipna=True, numeric_only=True)
-    for column in df:
-        if column == "food_names" or column == "BMI":
-            continue
-        df[column] = df[column].fillna(median_df[column])
+    df2 = df.copy()
+    genders = df2.pop('gender')
+    genders = genders.unique()
+    for gender in genders:
+        for column in df:
+            if column == "food_names" or column == "BMI":
+                continue
+            m1 = (df['gender'] == gender)
+            # median = df.loc[m1, column].median()
+            df.loc[m1, column] = df.loc[m1, column].fillna(df.loc[m1, column].median())
+
+    #
+    # for column in df:
+    #     if column == "food_names" or column == "BMI":
+    #         continue
+    #     df[column] = df[column].fillna(median_df[column])
 
     indices = list(np.where(df['BMI'].isna()))[0]
     for index in indices:
@@ -94,8 +105,11 @@ def change_food_names_in_final_table(df):
 
 if __name__ == '__main__':
     # join()
-    # handle_nan()
+    handle_nan()
     df = pd.read_excel("final_dataset_with_median.xlsx")
-    # change_food_names_in_final_table(df)
-    # get_euclidean_matrix(df)
+    change_food_names_in_final_table(df)
+    df = pd.read_excel("final_dataset_with_median.xlsx")
+    get_euclidean_matrix(df)
+    train_and_test.create_train_and_test()
+
     machine_learning.learn(df, pic_name="icarbonx_data", dir="icarbonx_data")

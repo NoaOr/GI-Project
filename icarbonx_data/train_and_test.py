@@ -14,6 +14,7 @@ def split_to_train_test():
     """
     # improve_ml_code.imporve()
     df = pd.read_excel("final_dataset_with_median.xlsx")
+    df = df.replace([-np.inf], 0).dropna(axis=1)
 
 
     X = df.drop('2h-iAUC', axis=1, inplace=False)
@@ -84,6 +85,6 @@ def write_to_file(df, file_name):
     df.to_excel(writer, sheet_name='Sheet1')
     writer.save()
 
-if __name__ == '__main__':
 
+def create_train_and_test():
     split_to_train_test()

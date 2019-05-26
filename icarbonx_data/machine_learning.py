@@ -144,6 +144,8 @@ def linear_regression_by_features(ml_df, features, pic_name, dir):
 
 
 def read_train_test_from_files():
+    # c = os.getcwd()
+    os.chdir(os.getcwd()[:os.getcwd().index("icarbonx_data")] + "icarbonx_data/train&test")
     X_train = pd.read_excel("X_train.xlsx")
     X_test = pd.read_excel("X_test.xlsx")
     y_train = pd.read_excel("y_train.xlsx").as_matrix()
@@ -168,8 +170,8 @@ def learn(ml_df, pic_name="", dir=""):
 
     X_train, X_test, y_train, y_test = read_train_test_from_files()
 
-    X_train = X_train.drop(['food_names'], axis='columns')
-    X_test = X_test.drop(['food_names'], axis='columns')
+    # X_train = X_train.drop(['food_names'], axis='columns')
+    # X_test = X_test.drop(['food_names'], axis='columns')
 
 
     ##########################################################
@@ -189,6 +191,7 @@ def learn(ml_df, pic_name="", dir=""):
     features = list(ml_df.columns.values)
     features.remove('2h-iAUC')
     features.remove('food_names')
+    features.remove('patient_identifier')
 
     # Plot_output.plot_two_cols(x='Carbohydrt_(g)', y='GI Value', df=ml_df, pic_name="carbo_vs_gi" + pic_name)
 
