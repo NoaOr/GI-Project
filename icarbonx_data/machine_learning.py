@@ -142,6 +142,18 @@ def linear_regression_by_features(ml_df, features, pic_name, dir):
     linear_regression.predict(X_train, X_test, y_train, y_test, features, pic_name, dir)
 
 
+
+def read_train_test_from_files():
+    X_train = pd.read_excel("X_train.xlsx")
+    X_test = pd.read_excel("X_test.xlsx")
+    y_train = pd.read_excel("y_train.xlsx").as_matrix()
+    y_train = np.ravel(y_train)
+    y_test = pd.read_excel("y_test.xlsx").as_matrix()
+    y_test = np.ravel(y_test)
+
+    return X_train, X_test, y_train, y_test
+
+
 def learn(ml_df, pic_name="", dir=""):
     """
     THe function creates train and test and
@@ -150,26 +162,23 @@ def learn(ml_df, pic_name="", dir=""):
     :param pic_name:
     :return:
     """
-    # X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
-    # RF_X_train, RF_X_test, RF_y_train, RF_y_test = split_to_train_test(ml_df, with_food_groups=1)
+    ################################################
+    # read train and test from files
+    ###############################################
 
+    X_train, X_test, y_train, y_test = read_train_test_from_files()
 
-    ##########################################################
-    # test on train
-    ##########################################################
+    X_train = X_train.drop(['food_names'], axis='columns')
+    X_test = X_test.drop(['food_names'], axis='columns')
 
-    # X_test = X_train
-    # y_test = y_train
-    # RF_X_test = RF_X_train
-    # RF_y_test = RF_y_train
 
     ##########################################################
     # separate train and test randomly
     ##########################################################
 
-    RF_X_train, RF_X_test, y_train, y_test = get_train_and_test(ml_df)
-    RF_X_train = RF_X_train.drop(['food_names'], axis='columns')
-    RF_X_test = RF_X_test.drop(['food_names'], axis='columns')
+    # RF_X_train, RF_X_test, y_train, y_test = get_train_and_test(ml_df)
+    # RF_X_train = RF_X_train.drop(['food_names'], axis='columns')
+    # RF_X_test = RF_X_test.drop(['food_names'], axis='columns')
     # X_train = X_train.drop(['FdGrp_desc'], axis='columns')
     # X_test = X_test.drop(['FdGrp_desc'], axis='columns')
 
@@ -229,8 +238,12 @@ def learn(ml_df, pic_name="", dir=""):
 
     print("\n\nRandom Forest model:\n")
     # features.append(('FdGrp_desc'))
-    random_forest.predict(RF_X_train, RF_X_test, y_train, y_test, features,
-                          'RF_variable_importance' + pic_name, 'Random_Forest'+ pic_name, dir)
+    # random_forest.predict(RF_X_train, RF_X_test, y_train, y_test, features,
+    #                       'RF_variable_importance' + pic_name, 'Random_Forest'+ pic_name, dir)
+    #
+
+    random_forest.predict(X_train, X_test, y_train, y_test, features,
+                          'RF_variable_importance' + pic_name, 'Random_Forest' + pic_name, dir)
 
 
 if __name__ == '__main__':
