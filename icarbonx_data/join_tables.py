@@ -3,6 +3,7 @@ import numpy as np
 import math
 from scipy.spatial import distance
 from scipy.spatial.distance import pdist, squareform
+from icarbonx_data import machine_learning
 
 
 
@@ -66,5 +67,6 @@ def get_euclidean_matrix(df):
 if __name__ == '__main__':
     # join()
     # handle_nan()
-    df = pd.read_excel("final_dataset.xlsx")
-    get_euclidean_matrix(df)
+    df = pd.read_excel("final_dataset_with_median.xlsx")
+    # get_euclidean_matrix(df)
+    machine_learning.learn(df, pic_name="icarbonx_data_random", dir="icarbonx_data")
