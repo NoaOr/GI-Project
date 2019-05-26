@@ -98,4 +98,4 @@ if __name__ == '__main__':
     df = pd.read_excel("final_dataset_with_median.xlsx")
     # change_food_names_in_final_table(df)
     # get_euclidean_matrix(df)
-    machine_learning.learn(df, pic_name="icarbonx_data_random", dir="icarbonx_data")
+    machine_learning.learn(df, pic_name="icarbonx_data", dir="icarbonx_data")
