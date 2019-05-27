@@ -105,11 +105,15 @@ def change_food_names_in_final_table(df):
 
 if __name__ == '__main__':
     # join()
-    handle_nan()
+    # handle_nan()
+    # df = pd.read_excel("final_dataset_with_median.xlsx")
+    # change_food_names_in_final_table(df)
+    # df = pd.read_excel("final_dataset_with_median.xlsx")
+    # get_euclidean_matrix(df)
+
     df = pd.read_excel("final_dataset_with_median.xlsx")
-    change_food_names_in_final_table(df)
-    df = pd.read_excel("final_dataset_with_median.xlsx")
-    get_euclidean_matrix(df)
+    train_and_test.add_features_to_df(df)
+
     train_and_test.create_train_and_test()
 
-    machine_learning.learn(df, pic_name="icarbonx_data", dir="icarbonx_data")
+    machine_learning.learn(df, pic_name="icarbonx_data_new_ftrs", dir="icarbonx_data")
