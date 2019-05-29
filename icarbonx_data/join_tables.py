@@ -35,9 +35,10 @@ def handle_nan():
 
     #
     # for column in df:
-    #     if column == "food_names" or column == "BMI":
-    #         continue
-    #     df[column] = df[column].fillna(median_df[column])
+    #       if column == "food_names" or column == "BMI":
+    #            continue
+    #       df[column] = df[column].fillna(median_df[column])
+
 
     indices = list(np.where(df['BMI'].isna()))[0]
     for index in indices:
@@ -46,6 +47,24 @@ def handle_nan():
     median_df = df.median(skipna=True, numeric_only=True)
     df['BMI'] = df['BMI'].fillna(median_df['BMI'])
 
+
+    print(df.isnull().sum())
+
+    writer = pd.ExcelWriter('final_dataset_with_median.xlsx', engine='xlsxwriter')
+    df.to_excel(writer, sheet_name='Sheet1')
+    writer.save()
+
+
+
+def handle_nan_without_personal_details():
+    df = pd.read_excel("dataset.xlsx")
+    df = df[pd.notnull(df['food_names'])]
+
+    median_df = df.median(skipna=True, numeric_only=True)
+    for column in df:
+        if column == "food_names" or column == "BMI":
+            continue
+        df[column] = df[column].fillna(median_df[column])
 
     print(df.isnull().sum())
 
@@ -85,6 +104,33 @@ def get_euclidean_matrix(df):
     writer.save()
 
 
+
+def get_euclidean_matrix_without_personal_details(df):
+    df.reset_index(drop=True, inplace=True)
+
+    foods = df['food_names']
+    food_examples = []
+    indices = list(range(0, len(foods)))
+    for i in indices:
+        food_examples.append(str(foods[i]) + str(i))
+    food_examples = pd.Series(food_examples)
+
+    df = df.drop(['food_names'], axis='columns')
+    df = df.replace([-np.inf], 0).dropna(axis=1)
+
+    num_examples = df.shape[0]
+
+    distances = pdist(df.values, metric='euclidean')
+    # print(distance)
+    dis_array = squareform(distances)
+    # print(dis_array)
+    dis_df = pd.DataFrame(data = dis_array, index=food_examples, columns=food_examples)
+    # print(dis_df)
+    writer = pd.ExcelWriter('Euclidean_distance_icarbonx.xlsx', engine='xlsxwriter')
+    dis_df.to_excel(writer, sheet_name='Sheet1')
+    writer.save()
+
+
 def change_food_names_in_final_table(df):
     # df = pd.read_excel("final_dataset_with_median.xlsx")
     df.reset_index(drop=True, inplace=True)
@@ -110,10 +156,8 @@ if __name__ == '__main__':
     # change_food_names_in_final_table(df)
     # df = pd.read_excel("final_dataset_with_median.xlsx")
     # get_euclidean_matrix(df)
-
     df = pd.read_excel("final_dataset_with_median.xlsx")
     train_and_test.add_features_to_df(df)
-
     train_and_test.create_train_and_test()
 
     machine_learning.learn(df, pic_name="icarbonx_data_new_ftrs", dir="icarbonx_data")
