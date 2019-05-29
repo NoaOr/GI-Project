@@ -57,12 +57,13 @@ def handle_nan():
 def get_euclidean_matrix(df):
     df.reset_index(drop=True, inplace=True)
 
-    foods = df['food_names']
-    food_examples = []
-    indices = list(range(0, len(foods)))
-    for i in indices:
-        food_examples.append(str(foods[i]) + str(i))
-    food_examples = pd.Series(food_examples)
+    # foods = df['food_names']
+    # food_examples = []
+    # indices = list(range(0, len(foods)))
+    # for i in indices:
+    #     food_examples.append(str(foods[i]) + str(i))
+    # food_examples = pd.Series(food_examples)
+    food_examples = df['food_names']
 
     df = df.drop(['food_names', 'height', 'weight', 'above_range', 'BMI', 'age', 'gender',
                   'glucose_tolerance_category','90-percentile_of_2h-iAUC', 'average_carbs_ratio',
@@ -86,7 +87,7 @@ def get_euclidean_matrix(df):
 
 
 def change_food_names_in_final_table(df):
-    # df = pd.read_excel("final_dataset_with_median.xlsx")
+    # df = pd.read_excel("final_dataset_with_median_all.xlsx")
     df.reset_index(drop=True, inplace=True)
 
     foods = df['food_names']
@@ -103,13 +104,23 @@ def change_food_names_in_final_table(df):
     df.to_excel(writer, sheet_name='Sheet1')
     writer.save()
 
+def remove_high_low_gi(df):
+    df = df[df.loc['2h-iAUC'] <= 75]
+    writer = pd.ExcelWriter('final_dataset_with_median.xlsx', engine='xlsxwriter')
+    df.to_excel(writer, sheet_name='Sheet1')
+    writer.save()
+
+
 if __name__ == '__main__':
     # join()
     # handle_nan()
-    # df = pd.read_excel("final_dataset_with_median.xlsx")
+    df = pd.read_excel("final_dataset_with_median_all.xlsx")
+
+    #### not run!!! ####
     # change_food_names_in_final_table(df)
-    # df = pd.read_excel("final_dataset_with_median.xlsx")
-    # get_euclidean_matrix(df)
+    remove_high_low_gi(df)
+    df = pd.read_excel("final_dataset_with_median.xlsx")
+    get_euclidean_matrix(df)
 
     df = pd.read_excel("final_dataset_with_median.xlsx")
     train_and_test.add_features_to_df(df)

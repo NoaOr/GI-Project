@@ -42,7 +42,7 @@ def split_to_train_test():
             # print("x_train_row: ", j)
 
             if j >= X_train.shape[0]:
-                print(j)
+                # print(j)
                 break
 
             compared_food = X_train.iloc[j]['food_names']
