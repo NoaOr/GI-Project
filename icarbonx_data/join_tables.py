@@ -105,7 +105,7 @@ def change_food_names_in_final_table(df):
     writer.save()
 
 def remove_high_low_gi(df):
-    df = df[df.loc['2h-iAUC'] <= 75]
+    df = df[df['2h-iAUC'] <= 75]
     writer = pd.ExcelWriter('final_dataset_with_median.xlsx', engine='xlsxwriter')
     df.to_excel(writer, sheet_name='Sheet1')
     writer.save()
@@ -114,17 +114,18 @@ def remove_high_low_gi(df):
 if __name__ == '__main__':
     # join()
     # handle_nan()
-    df = pd.read_excel("final_dataset_with_median_all.xlsx")
+    # df = pd.read_excel("final_dataset_with_median_all.xlsx")
 
     #### not run!!! ####
     # change_food_names_in_final_table(df)
-    remove_high_low_gi(df)
-    df = pd.read_excel("final_dataset_with_median.xlsx")
-    get_euclidean_matrix(df)
+
+    # remove_high_low_gi(df)
+    # df = pd.read_excel("final_dataset_with_median.xlsx")
+    # get_euclidean_matrix(df)
 
     df = pd.read_excel("final_dataset_with_median.xlsx")
-    train_and_test.add_features_to_df(df)
+    # train_and_test.add_features_to_df(df)
 
-    train_and_test.create_train_and_test()
+    # train_and_test.create_train_and_test()
 
     machine_learning.learn(df, pic_name="icarbonx_data_new_ftrs", dir="icarbonx_data")

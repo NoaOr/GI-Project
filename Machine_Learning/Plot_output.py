@@ -32,7 +32,7 @@ def plot_graph(X_test, y_test, predict, pic_name, dir, coefficients_str=""):
     plt.clf()
     plt.figure(figsize=(20, 13))
 
-    plt.title(pic_name, fontdict=font)
+    # plt.title(pic_name, fontdict=font)
 
 
     plt.scatter(y_test, predict, color='blue', s=40)
@@ -164,9 +164,8 @@ def plot_variable_importance(best_random, lables, pic_name1, dir):
 
     features_dict = dict(zip(lables, feature_imp))
     print(features_dict)
-    new_features_dict = {key: val for key, val in features_dict.items() if val >= features_dict['Sodium_(mg)']}
-
-    indices = np.argsort(feature_imp)
+    # new_features_dict = {key: val for key, val in features_dict.items() if val >= features_dict['Vit_K_(µg)']}
+    new_features_dict = features_dict
 
     plt.title('Random Forest - Feature Importance')
     # font = {'family': 'serif',
@@ -177,14 +176,21 @@ def plot_variable_importance(best_random, lables, pic_name1, dir):
 
 
     # sns.set(font_scale=0.5)
-    # sns.set_context("paper", rc={"font.size": 3, "axes.titlesize": 8, "axes.labelsize": 5})
+    sns.set_context("paper", rc={"font.size": 3, "axes.titlesize": 8, "axes.labelsize": 5})
     sns.set()
     labels_list = []
     for item in new_features_dict.keys():
         labels_list.append(str(item))
 
+    importance_list = []
+    for imp in new_features_dict.values():
+        importance_list.append(imp)
+
+
     # labels_list.remove('iron')
-    sns.barplot(x=feature_imp, y=labels_list)
+    # sns.barplot(x=feature_imp, y=labels_list)
+    sns.barplot(x=importance_list, y=labels_list)
+
     # Add labels to your graph
     plt.xlabel('Feature Importance Score')
     plt.ylabel('Features')
