@@ -1,6 +1,9 @@
 import pandas as pd
 
 if __name__ == '__main__':
+    """
+    main function - merge the usda tables
+    """
     t1 = pd.read_excel('USDA_short&long.xlsx')
     t2 = pd.read_excel('USDA_short_only.xlsx')
     t1_df = pd.DataFrame(t1)

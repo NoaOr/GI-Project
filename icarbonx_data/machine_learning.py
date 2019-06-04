@@ -144,6 +144,10 @@ def linear_regression_by_features(ml_df, features, pic_name, dir):
 
 
 def read_train_test_from_files():
+    """
+    The function separates the data to train and test
+    :return:
+    """
     # c = os.getcwd()
     os.chdir(os.getcwd()[:os.getcwd().index("icarbonx_data")] + "icarbonx_data/train&test")
     X_train = pd.read_excel("X_train.xlsx")
@@ -157,6 +161,7 @@ def read_train_test_from_files():
 
 
 def learn(ml_df, pic_name="", dir=""):
+
     """
     THe function creates train and test and
      calls the learning models to predict

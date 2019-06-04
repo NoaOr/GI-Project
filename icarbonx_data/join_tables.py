@@ -6,8 +6,11 @@ from scipy.spatial.distance import pdist, squareform
 from icarbonx_data import machine_learning, train_and_test
 
 
-
 def join():
+    """
+    The function merges the tables of dataset
+    :return:
+    """
     dataset_df = pd.read_excel("dataset.xlsx")
     statistics_df = pd.read_excel("statistics.xlsx")
 
@@ -17,7 +20,12 @@ def join():
     merge_df.to_excel(writer, sheet_name='Sheet1')
     writer.save()
 
+
 def handle_nan():
+    """
+    THe function handles nan rows
+    :return:
+    """
     df = pd.read_excel("final_dataset.xlsx")
     # print(df.isnull().sum())
 
@@ -55,6 +63,11 @@ def handle_nan():
 
 
 def get_euclidean_matrix(df):
+    """
+    The function returns an euclidean matrix of distances between foods.
+    :param df:
+    :return:
+    """
     df.reset_index(drop=True, inplace=True)
 
     # foods = df['food_names']
@@ -88,6 +101,11 @@ def get_euclidean_matrix(df):
 
 def change_food_names_in_final_table(df):
     # df = pd.read_excel("final_dataset_with_median_all.xlsx")
+    """
+    add numbers to the food names
+    :param df:
+    :return:
+    """
     df.reset_index(drop=True, inplace=True)
 
     foods = df['food_names']
@@ -104,7 +122,13 @@ def change_food_names_in_final_table(df):
     df.to_excel(writer, sheet_name='Sheet1')
     writer.save()
 
-def remove_high_low_gi(df):
+
+def remove_high_gi(df):
+    """
+    remove high GI from df
+    :param df:
+    :return:
+    """
     df = df[df['2h-iAUC'] <= 75]
     writer = pd.ExcelWriter('final_dataset_with_median.xlsx', engine='xlsxwriter')
     df.to_excel(writer, sheet_name='Sheet1')
@@ -119,7 +143,7 @@ if __name__ == '__main__':
     #### not run!!! ####
     # change_food_names_in_final_table(df)
 
-    # remove_high_low_gi(df)
+    # remove_high_gi(df)
     # df = pd.read_excel("final_dataset_with_median.xlsx")
     # get_euclidean_matrix(df)
 
