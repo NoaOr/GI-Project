@@ -166,6 +166,8 @@ def plot_variable_importance(best_random, lables, pic_name1, dir):
     features_dict = dict(zip(lables, feature_imp))
     print(features_dict)
 
+    new_features_dict = {key: val for key, val in features_dict.items() if val >= features_dict['Vit_K_(µg)']}
+
     indices = np.argsort(feature_imp)
 
     plt.title('Random Forest - Feature Importance')
@@ -177,12 +179,20 @@ def plot_variable_importance(best_random, lables, pic_name1, dir):
 
     sns.set(font_scale=0.2)
 
-    sns.set_context("paper", rc={"font.size": 8, "axes.titlesize": 8, "axes.labelsize": 5})
+    sns.set_context("paper", rc={"font.size": 2, "axes.titlesize": 2, "axes.labelsize": 2})
     labels_list = []
-    for item in features_dict.keys():
+    for item in new_features_dict.keys():
         labels_list.append(str(item))
 
-    sns.barplot(x=feature_imp, y=labels_list)
+    importance_list = []
+    for imp in new_features_dict.values():
+        importance_list.append(imp)
+
+    # labels_list.remove('iron')
+    # sns.barplot(x=feature_imp, y=labels_list)
+    sns.barplot(x=importance_list, y=labels_list)
+
+    # sns.barplot(x=feature_imp, y=labels_list)
     # Add labels to your graph
     plt.xlabel('Feature Importance Score')
     plt.ylabel('Features')

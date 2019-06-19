@@ -168,10 +168,12 @@ def learn(ml_df, X_train, X_test, y_train, y_test, RF_X_train, RF_X_test, pic_na
     ##########################################################
 
     # X_train, X_test, y_train, y_test = get_train_and_test(ml_df)
-    # X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
-    # X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
-    # X_train = X_train.drop(['FdGrp_desc'], axis='columns')
-    # X_test = X_test.drop(['FdGrp_desc'], axis='columns')
+    X_train = X_train.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    X_test = X_test.drop(['Food Description in 1994-96 CSFII'], axis='columns')
+    X_train = X_train.drop(['FdGrp_desc'], axis='columns')
+    X_test = X_test.drop(['FdGrp_desc'], axis='columns')
+    RF_X_train = X_train
+    RF_X_test = X_test
 
 
     features = list(ml_df.columns.values)
@@ -199,8 +201,8 @@ def learn(ml_df, X_train, X_test, y_train, y_test, RF_X_train, RF_X_test, pic_na
 
 
 
-    # print("\n\nDecision tree model:\n")
-    # decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree' + pic_name, dir)
+    print("\n\nDecision tree model:\n")
+    decision_tree.predict(X_train, X_test, y_train, y_test, features, 'Decision_tree' + pic_name, dir)
 
 
     ##########################################################
@@ -240,16 +242,19 @@ if __name__ == '__main__':
     ml_df = pd.read_excel("GI_USDA_IMPROVED.xlsx")
     os.chdir(os.getcwd()[:os.getcwd().index("Excel_files")] + "Excel_files/train&test")
 
-    X_train = pd.read_excel("X_train.xlsx")
-    X_test = pd.read_excel("X_test.xlsx")
-    y_train = pd.read_excel("y_train.xlsx").as_matrix()
-    y_train = np.ravel(y_train)
-    y_test = pd.read_excel("y_test.xlsx").as_matrix()
-    y_test = np.ravel(y_test)
-    RF_X_train = pd.read_excel("RF_X_train.xlsx")
-    RF_X_test = pd.read_excel("RF_X_test.xlsx")
+    # X_train = pd.read_excel("X_train.xlsx")
+    # X_test = pd.read_excel("X_test.xlsx")
+    # y_train = pd.read_excel("y_train.xlsx").as_matrix()
+    # y_train = np.ravel(y_train)
+    # y_test = pd.read_excel("y_test.xlsx").as_matrix()
+    # y_test = np.ravel(y_test)
+    # RF_X_train = pd.read_excel("RF_X_train.xlsx")
+    # RF_X_test = pd.read_excel("RF_X_test.xlsx")
 
-    learn(ml_df, X_train, X_test, y_train, y_test, RF_X_train, RF_X_test, pic_name='best_model', dir="best_model")
+    X_train, X_test, y_train, y_test = split_to_train_test(ml_df)
+    RF_X_train = RF_X_test = None
+    # learn(ml_df, X_train, X_test, y_train, y_test, RF_X_train, RF_X_test, pic_name='best_model', dir="best_model")
+    learn(ml_df, X_train, X_test, y_train, y_test, RF_X_train, RF_X_test, pic_name='new_test', dir='new_test')
 
 
 

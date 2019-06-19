@@ -14,11 +14,14 @@ def plot_corr(column_name, color_col_name, gi_usda_df, pic_name, title, range=0.
 
     bins_values = np.arange(0, max_in_col, range)
     labels_values = np.arange(0, len(bins_values) - 1, 1)
-
+    gi_usda_df['log_values'] = ""
+    gi_usda_df['log_values'] = np.log(gi_usda_df[column_name])
+    gi_usda_df['log_values'] += 6
     gi_usda_df[color_col_name] = ""
-    gi_usda_df[color_col_name] = pd.cut(gi_usda_df[column_name], bins=bins_values, labels=labels_values)
+    gi_usda_df[color_col_name] = pd.cut(gi_usda_df['log_values'], bins=bins_values, labels=labels_values)
 
-    gi_usda_df[color_col_name] = gi_usda_df[column_name].fillna(max_in_col)
+    # gi_usda_df[color_col_name] = gi_usda_df[column_name].fillna(max_in_col)
+    gi_usda_df = gi_usda_df[pd.notnull(gi_usda_df[color_col_name])]
 
     color_arr = gi_usda_df[color_col_name]
 
@@ -42,7 +45,9 @@ def plot_corr(column_name, color_col_name, gi_usda_df, pic_name, title, range=0.
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
     cbar = plt.colorbar()
-    cbar.ax.tick_params(labelsize=15)
+
+    # cbar.ax.tick_params(labelsize=15)
+    cbar.set_ticks([])
     cbar.set_label(column_name, weight='bold', size=18)
 
     if not os.getcwd().__contains__("Graphs & Photos"):
