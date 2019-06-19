@@ -19,7 +19,7 @@ font = {'family': 'serif',
 
 def plot_graph(X_test, y_test, predict, pic_name, dir, coefficients_str=""):
     if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("GI Project")] + "GI Project/Graphs & Photos")
+        os.chdir(os.getcwd()[:os.getcwd().index("GI-Project")] + "GI-Project/Graphs & Photos")
 
     if dir != "":
         path_dir = "./" + dir
@@ -73,7 +73,7 @@ def plot_graph(X_test, y_test, predict, pic_name, dir, coefficients_str=""):
 
 def plot_coefficients(coefficients_str, pic_name, dir):
     if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("GI Project")] + "GI Project/Graphs & Photos")
+        os.chdir(os.getcwd()[:os.getcwd().index("GI-Project")] + "GI-Project/Graphs & Photos")
 
     if dir != "":
         path_dir = "./" + dir
@@ -98,7 +98,8 @@ def plot_coefficients(coefficients_str, pic_name, dir):
 
 def plot_two_cols(x, y, df, pic_name, dir):
     if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("GI Project")] + "GI Project/Graphs & Photos")
+        os.chdir(os.getcwd()[:os.getcwd().index("GI-Project")] + "GI-"
+                                                                 "Project/Graphs & Photos")
 
     if dir != "":
         path_dir = "./" + dir
@@ -126,7 +127,7 @@ def plot_two_cols(x, y, df, pic_name, dir):
 
 def plot_DT_nodes(DTL_model, labels, dir):
     if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("GI Project")] + "GI Project/Graphs & Photos")
+        os.chdir(os.getcwd()[:os.getcwd().index("GI-Project")] + "GI-Project/Graphs & Photos")
 
     if dir != "":
         path_dir = "./" + dir
@@ -149,7 +150,7 @@ def plot_DT_nodes(DTL_model, labels, dir):
 
 def plot_variable_importance(best_random, lables, pic_name1, dir):
     if not os.getcwd().__contains__("Graphs & Photos"):
-        os.chdir(os.getcwd()[:os.getcwd().index("GI Project")] + "GI Project/Graphs & Photos")
+        os.chdir(os.getcwd()[:os.getcwd().index("GI-Project")] + "GI-Project/Graphs & Photos")
 
     if dir != "":
         path_dir = "./" + dir
@@ -164,8 +165,10 @@ def plot_variable_importance(best_random, lables, pic_name1, dir):
 
     features_dict = dict(zip(lables, feature_imp))
     print(features_dict)
-    # new_features_dict = {key: val for key, val in features_dict.items() if val >= features_dict['Vit_K_(µg)']}
-    new_features_dict = features_dict
+
+    new_features_dict = {key: val for key, val in features_dict.items() if val >= features_dict['Vit_K_(µg)']}
+
+    indices = np.argsort(feature_imp)
 
     plt.title('Random Forest - Feature Importance')
     # font = {'family': 'serif',
@@ -174,10 +177,11 @@ def plot_variable_importance(best_random, lables, pic_name1, dir):
     #         'size': 16,
     #         }
 
+    sns.set(font_scale=0.2)
 
-    # sns.set(font_scale=0.5)
-    sns.set_context("paper", rc={"font.size": 3, "axes.titlesize": 8, "axes.labelsize": 5})
-    sns.set()
+
+    sns.set_context("paper", rc={"font.size": 2, "axes.titlesize": 2, "axes.labelsize": 2})
+
     labels_list = []
     for item in new_features_dict.keys():
         labels_list.append(str(item))
@@ -185,7 +189,6 @@ def plot_variable_importance(best_random, lables, pic_name1, dir):
     importance_list = []
     for imp in new_features_dict.values():
         importance_list.append(imp)
-
 
     # labels_list.remove('iron')
     # sns.barplot(x=feature_imp, y=labels_list)
